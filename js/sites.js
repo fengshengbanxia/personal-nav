@@ -5,7 +5,7 @@
 
 // 站点数据管理
 const SitesManager = {
-    // API基础URL - 使用相对路径，自动适配当前域名
+    // API基础URL - 始终使用相对路径，让Pages Functions处理路由
     apiBaseUrl: '/api',
     
     // 存储API令牌
