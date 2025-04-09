@@ -5,11 +5,11 @@
 
 // 新增：获取并显示一言
 async function loadHitokotoQuote() {
-    const apiUrl = 'https://v1.hitokoto.cn/?c=a&c=e&c=f&encode=json'; // 动画、原创、网络
+    const apiUrl = 'https://v1.hitokoto.cn/?c=a&c=c&c=f&encode=json'; // 动画(a)、游戏(c)、网络(f) - 符合二次元、中二、网络调性
     const quoteElement = document.getElementById('daily-quote');
     const fromElement = document.getElementById('quote-from');
-    const defaultQuote = '独自莫凭栏，无限江山，别时容易见时难。';
-    const defaultFrom = '— 李煜';
+    const defaultQuote = '只要你还记得我，我就会一直在你的身边。';
+    const defaultFrom = '— 符文工房';
 
     try {
         const response = await fetch(apiUrl);
