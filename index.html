@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>夏天导航 | Summer Navigation</title>
-    <meta name="description" content="基于Cloudflare Workers和KV存储的个人导航网站">
+    <title>???? | Summer Navigation</title>
+    <meta name="description" content="??Cloudflare Workers?KV?????????">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -16,15 +16,12 @@
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center py-2">
                     <h1 class="site-title">
-                        <i class="bi bi-rocket"></i> 夏天导航
+                        <i class="bi bi-rocket"></i> ????
                     </h1>
                     <div class="user-controls">
-                        <div class="dropdown" id="theme-dropdown-container">
-                            <button id="theme-toggle" class="theme-toggle dropdown-toggle" type="button">
-                                <i class="bi bi-moon-stars"></i>
-                            </button>
-                            <!-- 主题下拉菜单会在theme.js中动态生成 -->
-                        </div>
+                        <button id="theme-toggle" class="theme-toggle">
+                            <i class="bi bi-sun"></i> <!-- Default to sun icon -->
+                        </button>
                         <div id="admin-container">
                             <a href="#" class="text-decoration-none d-none" id="admin-badge">admin</a>
                             <a href="#" class="text-decoration-none" id="login-btn">
@@ -38,22 +35,22 @@
         
         <main class="app-content">
             <div class="container py-3">
-                <!-- 搜索框 -->
+                <!-- ??? -->
                 <div class="search-container">
-                    <input type="text" id="search-input" class="form-control" placeholder="探索星辰大海...">
+                    <input type="text" id="search-input" class="form-control" placeholder="??????...">
                     <i class="bi bi-search search-icon"></i>
                 </div>
 
-                <!-- 状态组件 -->
+                <!-- ???? -->
                 <div class="status-widgets">
-                    <!-- 每日一言 -->
+                    <!-- ???? -->
                     <div class="widget widget-quote">
-                        <div class="mb-1"><i class="bi bi-quote"></i> 今日格言</div>
-                        <blockquote class="mb-2" id="daily-quote">独自莫凭栏，无限江山，别时容易见时难。</blockquote>
-                        <div class="text-end">— 李煜</div>
+                        <div class="mb-1"><i class="bi bi-quote"></i> ????</div>
+                        <blockquote class="mb-2" id="daily-quote">???????????????????</blockquote>
+                        <div class="text-end">? ??</div>
                     </div>
                     
-                    <!-- 日期 -->
+                    <!-- ?? -->
                     <div class="widget widget-date">
                         <div id="current-date">
                             <div class="mb-1"><i class="bi bi-calendar3"></i></div>
@@ -62,26 +59,26 @@
                         </div>
                     </div>
                     
-                    <!-- 时间 -->
+                    <!-- ?? -->
                     <div class="widget widget-time">
                         <div class="mb-1"><i class="bi bi-clock"></i></div>
                         <div id="time-display" class="time-display"></div>
                     </div>
                 </div>
 
-                <!-- 分类导航 -->
+                <!-- ???? -->
                 <div class="nav-categories" id="nav-categories">
-                    <!-- 分类导航项会在JS中动态生成 -->
+                    <!-- ???????JS????? -->
                 </div>
 
-                <!-- 网站分类和链接将在这里动态生成 -->
+                <!-- ??????????????? -->
                 <div id="sites-container" class="row g-4 mt-3">
-                    <!-- 加载指示器 -->
+                    <!-- ????? -->
                     <div class="text-center py-5" id="loading">
                         <div class="spinner-border text-light" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
-                        <p class="mt-2">加载中...</p>
+                        <p class="mt-2">???...</p>
                     </div>
                 </div>
             </div>
@@ -91,7 +88,7 @@
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center py-2">
                     <div>
-                        <p class="mb-0"> 2025 夏天导航</p>
+                        <p class="mb-0"> 2025 ????</p>
                     </div>
                     <div>
                         <a href="https://github.com/fengshengbanxia/personal-nav" target="_blank" class="text-decoration-none">
@@ -103,156 +100,156 @@
         </footer>
     </div>
     
-    <!-- 管理员登录模态框 -->
+    <!-- ???????? -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">管理员登录</h5>
+                    <h5 class="modal-title" id="loginModalLabel">?????</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="login-form">
                         <div class="mb-3">
-                            <label for="api-key" class="form-label">API 密钥</label>
+                            <label for="api-key" class="form-label">API ??</label>
                             <input type="password" class="form-control" id="api-key" autocomplete="new-password" required>
                         </div>
                         <div class="alert alert-danger d-none" id="login-error">
-                            登录失败，请检查您的 API 密钥
+                            ?????????? API ??
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="login-submit">登录</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">??</button>
+                    <button type="button" class="btn btn-primary" id="login-submit">??</button>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- 站点管理模态框 (仅管理员可见) -->
+    <!-- ??????? (??????) -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">站点管理</h5>
+                    <h5 class="modal-title" id="editModalLabel">????</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- 顶部导航 -->
+                    <!-- ???? -->
                     <ul class="nav nav-tabs mb-3" id="editTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="category-tab" data-bs-toggle="tab" data-bs-target="#categories-panel" type="button" role="tab">分类管理</button>
+                            <button class="nav-link active" id="category-tab" data-bs-toggle="tab" data-bs-target="#categories-panel" type="button" role="tab">????</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="site-tab" data-bs-toggle="tab" data-bs-target="#sites-panel" type="button" role="tab">站点管理</button>
+                            <button class="nav-link" id="site-tab" data-bs-toggle="tab" data-bs-target="#sites-panel" type="button" role="tab">????</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="json-tab" data-bs-toggle="tab" data-bs-target="#json-panel" type="button" role="tab">JSON编辑</button>
+                            <button class="nav-link" id="json-tab" data-bs-toggle="tab" data-bs-target="#json-panel" type="button" role="tab">JSON??</button>
                         </li>
                     </ul>
                     
-                    <!-- 面板内容 -->
+                    <!-- ???? -->
                     <div class="tab-content" id="editTabsContent">
-                        <!-- 分类管理面板 -->
+                        <!-- ?????? -->
                         <div class="tab-pane fade show active" id="categories-panel" role="tabpanel" aria-labelledby="categories-tab">
                             <div class="d-flex justify-content-between mb-3">
-                                <h6 class="mb-0">分类列表</h6>
+                                <h6 class="mb-0">????</h6>
                                 <button class="btn btn-sm btn-primary" id="add-category-btn">
-                                    <i class="bi bi-plus-lg"></i> 添加分类
+                                    <i class="bi bi-plus-lg"></i> ????
                                 </button>
                             </div>
                             <div class="list-group" id="categories-list">
-                                <!-- 分类列表将在这里动态生成 -->
+                                <!-- ???????????? -->
                             </div>
                             
-                            <!-- 分类编辑表单 -->
+                            <!-- ?????? -->
                             <div class="card mt-3 d-none" id="category-form-card">
                                 <div class="card-body">
-                                    <h6 class="card-title mb-3" id="category-form-title">编辑分类</h6>
+                                    <h6 class="card-title mb-3" id="category-form-title">????</h6>
                                     <form id="category-form">
                                         <input type="hidden" id="category-id">
                                         <div class="mb-3">
-                                            <label for="category-name" class="form-label">分类名称</label>
+                                            <label for="category-name" class="form-label">????</label>
                                             <input type="text" class="form-control" id="category-name" required>
                                         </div>
                                         <div class="d-flex justify-content-end">
-                                            <button type="button" class="btn btn-outline-secondary me-2" id="cancel-category-btn">取消</button>
-                                            <button type="button" class="btn btn-primary" id="save-category-btn">保存分类</button>
+                                            <button type="button" class="btn btn-outline-secondary me-2" id="cancel-category-btn">??</button>
+                                            <button type="button" class="btn btn-primary" id="save-category-btn">????</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- 站点管理面板 -->
+                        <!-- ?????? -->
                         <div class="tab-pane fade" id="sites-panel" role="tabpanel" aria-labelledby="sites-tab">
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <label for="category-select" class="form-label">选择分类</label>
+                                    <label for="category-select" class="form-label">????</label>
                                     <select class="form-select" id="category-select">
-                                        <option value="">-- 请选择分类 --</option>
+                                        <option value="">-- ????? --</option>
                                     </select>
                                 </div>
                                 <div class="col-md-8 d-flex align-items-end justify-content-end">
                                     <button class="btn btn-sm btn-primary" id="add-site-btn" disabled>
-                                        <i class="bi bi-plus-lg"></i> 添加网站
+                                        <i class="bi bi-plus-lg"></i> ????
                                     </button>
                                 </div>
                             </div>
                             <div>
                                 <div class="alert alert-info" id="select-category-message">
-                                    请先选择一个分类
+                                    ????????
                                 </div>
                                 <div class="list-group mb-3 d-none" id="sites-list">
-                                    <!-- 站点列表将在这里动态生成 -->
+                                    <!-- ???????????? -->
                                 </div>
                             </div>
                             
-                            <!-- 站点编辑表单 -->
+                            <!-- ?????? -->
                             <div class="card mt-3 d-none" id="site-form-card">
                                 <div class="card-body">
-                                    <h6 class="card-title mb-3" id="site-form-title">编辑网站</h6>
+                                    <h6 class="card-title mb-3" id="site-form-title">????</h6>
                                     <form id="site-form">
                                         <input type="hidden" id="site-id">
                                         <div class="mb-3">
-                                            <label for="site-name" class="form-label">网站名称</label>
+                                            <label for="site-name" class="form-label">????</label>
                                             <input type="text" class="form-control" id="site-name" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="site-url" class="form-label">网站URL</label>
+                                            <label for="site-url" class="form-label">??URL</label>
                                             <input type="url" class="form-control" id="site-url" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="site-desc" class="form-label">网站描述</label>
+                                            <label for="site-desc" class="form-label">????</label>
                                             <input type="text" class="form-control" id="site-desc">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="site-icon" class="form-label">图标URL</label>
+                                            <label for="site-icon" class="form-label">??URL</label>
                                             <div class="input-group">
                                                 <input type="url" class="form-control" id="site-icon">
-                                                <a href="https://gonglue.qinggl.com/app/img/icon.jsp" target="_blank" class="btn btn-outline-primary" type="button" title="获取图标">
-                                                    获取图标
+                                                <a href="https://gonglue.qinggl.com/app/img/icon.jsp" target="_blank" class="btn btn-outline-primary" type="button" title="????">
+                                                    ????
                                                 </a>
                                             </div>
-                                            <small class="form-text text-muted">点击"获取图标"按钮跳转到图标获取网站，然后复制图标URL</small>
+                                            <small class="form-text text-muted">??"????"??????????????????URL</small>
                                         </div>
                                         <div class="d-flex justify-content-end">
-                                            <button type="button" class="btn btn-outline-secondary me-2" id="cancel-site-btn">取消</button>
-                                            <button type="button" class="btn btn-primary" id="save-site-btn">保存网站</button>
+                                            <button type="button" class="btn btn-outline-secondary me-2" id="cancel-site-btn">??</button>
+                                            <button type="button" class="btn btn-primary" id="save-site-btn">????</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- JSON编辑面板 -->
+                        <!-- JSON???? -->
                         <div class="tab-pane fade" id="json-panel" role="tabpanel" aria-labelledby="json-tab">
                             <div class="mb-3">
-                                <label for="sites-editor" class="form-label">站点数据 (JSON 格式)</label>
+                                <label for="sites-editor" class="form-label">???? (JSON ??)</label>
                                 <div class="alert alert-warning">
                                     <i class="bi bi-exclamation-triangle me-2"></i>
-                                    提示：直接编辑JSON可能会导致数据格式错误。建议使用上方的表单界面管理站点。
+                                    ???????JSON????????????????????????????
                                 </div>
                                 <textarea class="form-control" id="sites-editor" rows="15"></textarea>
                             </div>
@@ -260,24 +257,24 @@
                     </div>
                     
                     <div class="alert alert-danger d-none" id="edit-error">
-                        保存失败，请检查输入是否正确
+                        ??????????????
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="save-sites-btn">保存所有更改</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">??</button>
+                    <button type="button" class="btn btn-primary" id="save-sites-btn">??????</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 消息容器 -->
+    <!-- ???? -->
     <div id="message-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/theme.js"></script>
-    <script src="js/sites.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/sites.js"></script>
 </body>
 </html>
