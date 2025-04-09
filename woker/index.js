@@ -61,27 +61,6 @@ async function handleApiRequest(request, path, corsHeaders) {
         return jsonResponse({ error: '获取配置数据失败' }, corsHeaders, 500);
       }
     }
-    // 临时端点：初始化API令牌 - 部署后用一次，然后移除此代码
-    else if (apiPath === 'init-token') {
-      const url = new URL(request.url);
-      const tokenParam = url.searchParams.get('token');
-      
-      if (!tokenParam) {
-        return jsonResponse({ error: '未提供令牌' }, corsHeaders, 400);
-      }
-      
-      try {
-        // 设置API令牌
-        await KV_CONFIG.put('api_token', tokenParam);
-        return jsonResponse({ 
-          success: true, 
-          message: 'API令牌已成功初始化，请保存这个令牌用于后续管理操作',
-          token: tokenParam
-        }, corsHeaders);
-      } catch (e) {
-        return jsonResponse({ error: '设置API令牌失败' }, corsHeaders, 500);
-      }
-    }
   } 
   else if (request.method === 'POST') {
     // 需要身份验证的POST请求

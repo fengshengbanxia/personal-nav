@@ -24,11 +24,18 @@ const App = {
         // 加载站点数据
         await this.loadSites();
         
+        // 更新页面元素
+        this.updateDateTimeWidgets();
+        this.renderCategoryNav();
+        
         // 设置事件监听器
         this.setupEventListeners();
         
         // 初始化编辑模态框
         this.initEditModal();
+        
+        // 启动时间更新间隔
+        this.startTimeInterval();
     },
     
     // 加载站点数据
@@ -1302,6 +1309,138 @@ const App = {
                 this.deleteSite(categoryIndex, siteIndex);
             });
         });
+    },
+    
+    // 更新日期和时间组件
+    updateDateTimeWidgets() {
+        this.updateDateTime();
+        this.updateQuote();
+    },
+    
+    // 更新时间和日期
+    updateDateTime() {
+        const dateDisplay = document.getElementById('date-display');
+        const dayDisplay = document.getElementById('day-display');
+        const timeDisplay = document.getElementById('time-display');
+        
+        if (!dateDisplay || !dayDisplay || !timeDisplay) return;
+        
+        // 获取当前日期和时间
+        const now = new Date();
+        
+        // 格式化日期: 2025年4月9日
+        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        dateDisplay.textContent = now.toLocaleDateString('zh-CN', dateOptions);
+        
+        // 星期几
+        const dayOptions = { weekday: 'long' };
+        dayDisplay.textContent = now.toLocaleDateString('zh-CN', dayOptions);
+        
+        // 更新时间: 09:44:05
+        timeDisplay.textContent = now.toLocaleTimeString('zh-CN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+    },
+    
+    // 更新每日一言
+    updateQuote() {
+        // 这里可以实现从API获取每日一言，或使用预定义的名言列表
+        // 目前使用静态内容，可以后续扩展
+    },
+    
+    // 启动时间更新间隔
+    startTimeInterval() {
+        // 每秒更新一次时间
+        setInterval(() => this.updateDateTime(), 1000);
+    },
+    
+    // 渲染分类导航
+    renderCategoryNav() {
+        const navContainer = document.getElementById('nav-categories');
+        if (!navContainer || !this.sitesData || this.sitesData.length === 0) return;
+        
+        // 清空导航
+        navContainer.innerHTML = '';
+        
+        // 添加"全部"导航项
+        const allItem = document.createElement('div');
+        allItem.className = 'nav-category-item active';
+        allItem.dataset.categoryId = 'all';
+        allItem.innerHTML = '<i class="bi bi-heart-fill"></i> 全部';
+        allItem.addEventListener('click', () => this.filterByCategory('all'));
+        navContainer.appendChild(allItem);
+        
+        // 添加每个分类的导航项
+        this.sitesData.forEach(category => {
+            const navItem = document.createElement('div');
+            navItem.className = 'nav-category-item';
+            navItem.dataset.categoryId = category.id;
+            
+            // 根据分类名称选择图标
+            let icon = 'bi-bookmark';
+            if (category.name.includes('工具')) icon = 'bi-tools';
+            else if (category.name.includes('学习') || category.name.includes('教育')) icon = 'bi-book';
+            else if (category.name.includes('社交')) icon = 'bi-people';
+            else if (category.name.includes('娱乐')) icon = 'bi-film';
+            else if (category.name.includes('设计')) icon = 'bi-brush';
+            
+            navItem.innerHTML = `<i class="bi ${icon}"></i> ${category.name}`;
+            navItem.addEventListener('click', () => this.filterByCategory(category.id));
+            navContainer.appendChild(navItem);
+        });
+    },
+    
+    // 按分类筛选站点
+    filterByCategory(categoryId) {
+        // 更新导航项激活状态
+        const navItems = document.querySelectorAll('.nav-category-item');
+        navItems.forEach(item => {
+            if (item.dataset.categoryId === categoryId) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+        
+        // 显示全部或筛选特定分类
+        if (categoryId === 'all') {
+            this.renderSites();
+        } else {
+            // 找到对应分类
+            const category = this.sitesData.find(cat => cat.id === categoryId);
+            if (!category) return;
+            
+            // 只渲染该分类的站点
+            this.renderFilteredSites(category);
+        }
+    },
+    
+    // 渲染筛选后的站点
+    renderFilteredSites(category) {
+        const container = document.getElementById('sites-container');
+        if (!container) return;
+        
+        // 清空容器（保留加载指示器）
+        const loadingElem = document.getElementById('loading');
+        container.innerHTML = '';
+        if (loadingElem) {
+            container.appendChild(loadingElem);
+            loadingElem.classList.add('d-none'); // 隐藏加载指示器
+        }
+        
+        // 渲染单个分类
+        const categoryHtml = `
+            <div class="col-12 mb-3">
+                <h2 class="category-title">${category.name}</h2>
+                <div class="row g-3">
+                    ${category.sites.map(site => this.renderSiteCard(site)).join('')}
+                </div>
+            </div>
+        `;
+        container.innerHTML = categoryHtml;
     },
 };
 
