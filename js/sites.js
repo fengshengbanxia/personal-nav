@@ -47,68 +47,7 @@ const SitesManager = {
     
     // 获取示例站点数据
     getMockSites() {
-        return [
-            {
-                id: 'tools',
-                name: '实用工具',
-                sites: [
-                    {
-                        id: 'github',
-                        name: 'GitHub',
-                        url: 'https://github.com',
-                        desc: '全球最大的开源代码托管平台',
-                        icon: 'https://github.githubassets.com/favicons/favicon.svg'
-                    },
-                    {
-                        id: 'cloudflare',
-                        name: 'Cloudflare',
-                        url: 'https://dash.cloudflare.com',
-                        desc: 'Cloudflare控制台',
-                        icon: 'https://www.cloudflare.com/favicon.ico'
-                    }
-                ]
-            },
-            {
-                id: 'social',
-                name: '社交媒体',
-                sites: [
-                    {
-                        id: 'twitter',
-                        name: 'Twitter',
-                        url: 'https://twitter.com',
-                        desc: '全球知名社交媒体平台',
-                        icon: 'https://abs.twimg.com/responsive-web/web/icon-default.604e2486a34a2f6e1.png'
-                    },
-                    {
-                        id: 'weibo',
-                        name: '微博',
-                        url: 'https://weibo.com',
-                        desc: '中国最大的社交媒体平台之一',
-                        icon: 'https://weibo.com/favicon.ico'
-                    }
-                ]
-            },
-            {
-                id: 'dev',
-                name: '开发资源',
-                sites: [
-                    {
-                        id: 'mdn',
-                        name: 'MDN Web文档',
-                        url: 'https://developer.mozilla.org',
-                        desc: '最全面的Web开发文档',
-                        icon: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png'
-                    },
-                    {
-                        id: 'stackoverflow',
-                        name: 'Stack Overflow',
-                        url: 'https://stackoverflow.com',
-                        desc: '全球最大的程序员问答社区',
-                        icon: 'https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico'
-                    }
-                ]
-            }
-        ];
+        return [];
     },
     
     // 更新站点数据（需要身份验证）
