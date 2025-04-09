@@ -16,8 +16,8 @@ const SitesManager = {
         // 获取保存的API令牌（如果有）
         this.token = localStorage.getItem('api_token') || '';
         
-        // 检测环境，设置是否使用模拟数据
-        this.useMockData = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        // 不再使用模拟数据，统一使用真实API
+        this.useMockData = false;
     },
     
     // 获取站点数据
