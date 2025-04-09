@@ -38,7 +38,7 @@ const ThemeManager = {
     // 设置主题
     setTheme(theme) {
         // 移除所有主题类
-        document.body.classList.remove('dark-theme', 'custom-theme');
+        document.body.classList.remove('dark-theme', 'custom-theme', 'custom-background');
         
         // 应用主题类
         if (theme === 'dark') {
@@ -47,7 +47,9 @@ const ThemeManager = {
             document.body.classList.add('custom-theme');
             // 应用自定义背景
             const backgroundUrl = this.getCustomBackground();
-            this.setCustomBackground(backgroundUrl);
+            if (backgroundUrl) {
+                this.setCustomBackground(backgroundUrl);
+            }
             
             // 如果没有背景，打开设置对话框
             if (!backgroundUrl) {
@@ -179,6 +181,7 @@ const ThemeManager = {
         if (theme === 'auto' || !theme) {
             const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             theme = prefersDarkMode ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
         }
         
         // 应用主题设置
@@ -193,11 +196,6 @@ const ThemeManager = {
             // 为主题按钮添加下拉菜单属性
             themeToggle.setAttribute('data-bs-toggle', 'dropdown');
             themeToggle.setAttribute('aria-expanded', 'false');
-            
-            // 添加单击事件监听器，直接在浅色和深色之间切换
-            themeToggle.addEventListener('click', (e) => {
-                // 如果有下拉菜单，点击就会显示，不需要额外处理
-            });
         }
         
         // 监听系统主题变化
