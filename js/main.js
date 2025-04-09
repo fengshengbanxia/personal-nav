@@ -11,6 +11,11 @@ const App = {
     // 是否已登录管理员
     isAdmin: false,
     
+    // 当前选中的分类和站点（用于表单编辑）
+    currentCategoryIndex: -1,
+    currentSiteIndex: -1,
+    formMode: 'add', // 'add' 或 'edit'
+    
     // 初始化应用
     async init() {
         // 检查是否已经登录
@@ -21,6 +26,9 @@ const App = {
         
         // 设置事件监听器
         this.setupEventListeners();
+        
+        // 初始化编辑模态框
+        this.initEditModal();
     },
     
     // 加载站点数据
@@ -228,6 +236,166 @@ const App = {
                 await this.handleSaveSites();
             });
         }
+        
+        // 添加分类按钮
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        if (addCategoryBtn) {
+            addCategoryBtn.addEventListener('click', () => {
+                this.showCategoryForm('add');
+            });
+        }
+        
+        // 分类表单提交
+        const categoryForm = document.getElementById('category-form');
+        if (categoryForm) {
+            categoryForm.addEventListener('submit', e => {
+                e.preventDefault();
+                this.saveCategoryForm();
+            });
+        }
+        
+        // 取消分类编辑按钮
+        const cancelCategoryBtn = document.getElementById('cancel-category-btn');
+        if (cancelCategoryBtn) {
+            cancelCategoryBtn.addEventListener('click', () => {
+                this.hideCategoryForm();
+            });
+        }
+        
+        // 分类选择下拉框
+        const categorySelect = document.getElementById('category-select');
+        if (categorySelect) {
+            categorySelect.addEventListener('change', () => {
+                this.handleCategorySelect();
+            });
+        }
+        
+        // 添加站点按钮
+        const addSiteBtn = document.getElementById('add-site-btn');
+        if (addSiteBtn) {
+            addSiteBtn.addEventListener('click', () => {
+                this.showSiteForm('add');
+            });
+        }
+        
+        // 站点表单提交
+        const siteForm = document.getElementById('site-form');
+        if (siteForm) {
+            siteForm.addEventListener('submit', e => {
+                e.preventDefault();
+                this.saveSiteForm();
+            });
+        }
+        
+        // 取消站点编辑按钮
+        const cancelSiteBtn = document.getElementById('cancel-site-btn');
+        if (cancelSiteBtn) {
+            cancelSiteBtn.addEventListener('click', () => {
+                this.hideSiteForm();
+            });
+        }
+        
+        // 编辑模态框的多个选项卡切换事件
+        const jsonTab = document.getElementById('json-tab');
+        if (jsonTab) {
+            jsonTab.addEventListener('shown.bs.tab', () => {
+                // 当切换到JSON标签时，更新JSON编辑器的内容
+                this.updateJsonEditor();
+            });
+        }
+    },
+    
+    // 初始化编辑模态框
+    initEditModal() {
+        // 选项卡切换事件
+        const categoryTab = document.getElementById('category-tab');
+        const siteTab = document.getElementById('site-tab');
+        const jsonTab = document.getElementById('json-tab');
+        
+        if (categoryTab) {
+            categoryTab.addEventListener('click', () => {
+                this.hideErrorMessages();
+                this.renderCategoriesList();
+            });
+        }
+        
+        if (siteTab) {
+            siteTab.addEventListener('click', () => {
+                this.hideErrorMessages();
+                this.populateCategorySelect();
+            });
+        }
+        
+        if (jsonTab) {
+            jsonTab.addEventListener('click', () => {
+                this.hideErrorMessages();
+                this.updateJsonEditor();
+            });
+        }
+        
+        // 绑定添加分类按钮事件
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        if (addCategoryBtn) {
+            addCategoryBtn.addEventListener('click', () => {
+                this.showCategoryForm('add');
+            });
+        }
+        
+        // 绑定分类表单提交事件
+        const saveCategoryBtn = document.getElementById('save-category-btn');
+        if (saveCategoryBtn) {
+            saveCategoryBtn.addEventListener('click', () => {
+                this.saveCategoryForm();
+            });
+        }
+        
+        // 绑定取消分类表单事件
+        const cancelCategoryBtn = document.getElementById('cancel-category-btn');
+        if (cancelCategoryBtn) {
+            cancelCategoryBtn.addEventListener('click', () => {
+                this.hideCategoryForm();
+            });
+        }
+        
+        // 绑定分类选择事件
+        const categorySelect = document.getElementById('category-select');
+        if (categorySelect) {
+            categorySelect.addEventListener('change', () => {
+                this.handleCategorySelect();
+            });
+        }
+        
+        // 绑定添加站点按钮事件
+        const addSiteBtn = document.getElementById('add-site-btn');
+        if (addSiteBtn) {
+            addSiteBtn.addEventListener('click', () => {
+                this.showSiteForm('add');
+            });
+        }
+        
+        // 绑定站点表单提交事件
+        const saveSiteBtn = document.getElementById('save-site-btn');
+        if (saveSiteBtn) {
+            saveSiteBtn.addEventListener('click', () => {
+                this.saveSiteForm();
+            });
+        }
+        
+        // 绑定取消站点表单事件
+        const cancelSiteBtn = document.getElementById('cancel-site-btn');
+        if (cancelSiteBtn) {
+            cancelSiteBtn.addEventListener('click', () => {
+                this.hideSiteForm();
+            });
+        }
+        
+        // 绑定保存按钮事件
+        const saveBtn = document.getElementById('save-sites-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                this.handleSaveSites();
+            });
+        }
     },
     
     // 处理管理员登录
@@ -275,6 +443,259 @@ const App = {
         }
     },
     
+    // 显示分类表单
+    showCategoryForm(mode) {
+        this.formMode = mode;
+        const categoryFormCard = document.getElementById('category-form-card');
+        const categoryIdInput = document.getElementById('category-id');
+        const categoryNameInput = document.getElementById('category-name');
+        const categoryFormTitle = document.getElementById('category-form-title');
+        
+        if (!categoryFormCard || !categoryNameInput || !categoryFormTitle) return;
+        
+        // 重置表单
+        if (categoryIdInput) categoryIdInput.value = '';
+        categoryNameInput.value = '';
+        
+        if (mode === 'add') {
+            // 添加分类模式
+            categoryFormTitle.textContent = '添加分类';
+        } else {
+            // 编辑分类模式 - 已在 editCategory 中处理
+            return;
+        }
+        
+        // 显示表单
+        categoryFormCard.classList.remove('d-none');
+    },
+    
+    // 隐藏分类表单
+    hideCategoryForm() {
+        const categoryFormCard = document.getElementById('category-form-card');
+        if (categoryFormCard) {
+            categoryFormCard.classList.add('d-none');
+        }
+    },
+    
+    // 保存分类表单
+    saveCategoryForm() {
+        const categoryIdInput = document.getElementById('category-id');
+        const categoryNameInput = document.getElementById('category-name');
+        
+        if (!categoryNameInput) return;
+        
+        const categoryName = categoryNameInput.value.trim();
+        if (!categoryName) {
+            this.showError('请输入分类名称');
+            return;
+        }
+        
+        if (this.formMode === 'add') {
+            // 添加新分类
+            const newCategoryId = 'category_' + Date.now();
+            const newCategory = {
+                id: newCategoryId,
+                name: categoryName,
+                sites: []
+            };
+            this.sitesData.push(newCategory);
+            
+            this.showMessage(`已添加分类 "${categoryName}"`, 'success');
+        } else if (this.formMode === 'edit') {
+            // 编辑现有分类
+            if (this.currentCategoryIndex >= 0 && this.currentCategoryIndex < this.sitesData.length) {
+                const category = this.sitesData[this.currentCategoryIndex];
+                category.name = categoryName;
+                
+                this.showMessage(`已更新分类 "${categoryName}"`, 'success');
+            }
+        }
+        
+        // 隐藏表单
+        this.hideCategoryForm();
+        
+        // 重新渲染分类列表
+        this.renderCategoriesList();
+        
+        // 重新填充分类选择下拉框
+        this.populateCategorySelect();
+        
+        // 更新JSON编辑器
+        this.updateJsonEditor();
+    },
+    
+    // 显示站点表单
+    showSiteForm(mode) {
+        this.formMode = mode;
+        const siteFormCard = document.getElementById('site-form-card');
+        const siteIdInput = document.getElementById('site-id');
+        const siteNameInput = document.getElementById('site-name');
+        const siteUrlInput = document.getElementById('site-url');
+        const siteIconInput = document.getElementById('site-icon');
+        const siteDescInput = document.getElementById('site-desc');
+        const siteFormTitle = document.getElementById('site-form-title');
+        
+        if (!siteFormCard || !siteNameInput || !siteUrlInput || !siteFormTitle) return;
+        
+        // 检查是否已选择分类
+        if (this.currentCategoryIndex < 0 || this.currentCategoryIndex >= this.sitesData.length) {
+            this.showError('请先选择一个分类');
+            return;
+        }
+        
+        // 重置表单
+        if (siteIdInput) siteIdInput.value = '';
+        siteNameInput.value = '';
+        siteUrlInput.value = '';
+        if (siteIconInput) siteIconInput.value = '';
+        if (siteDescInput) siteDescInput.value = '';
+        
+        if (mode === 'add') {
+            // 添加站点模式
+            siteFormTitle.textContent = '添加网站';
+        } else {
+            // 编辑站点模式 - 已在 editSite 中处理
+            return;
+        }
+        
+        // 显示表单
+        siteFormCard.classList.remove('d-none');
+    },
+    
+    // 隐藏站点表单
+    hideSiteForm() {
+        const siteFormCard = document.getElementById('site-form-card');
+        if (siteFormCard) {
+            siteFormCard.classList.add('d-none');
+        }
+    },
+    
+    // 保存站点表单
+    saveSiteForm() {
+        const siteIdInput = document.getElementById('site-id');
+        const siteNameInput = document.getElementById('site-name');
+        const siteUrlInput = document.getElementById('site-url');
+        const siteIconInput = document.getElementById('site-icon');
+        const siteDescInput = document.getElementById('site-desc');
+        
+        if (!siteNameInput || !siteUrlInput) return;
+        
+        // 检查表单值
+        const siteName = siteNameInput.value.trim();
+        const siteUrl = siteUrlInput.value.trim();
+        const siteIcon = siteIconInput ? siteIconInput.value.trim() : '';
+        const siteDesc = siteDescInput ? siteDescInput.value.trim() : '';
+        
+        if (!siteName) {
+            this.showError('请输入网站名称');
+            return;
+        }
+        
+        if (!siteUrl) {
+            this.showError('请输入网站URL');
+            return;
+        }
+        
+        // 验证URL格式
+        if (!this.isValidUrl(siteUrl)) {
+            this.showError('请输入有效的URL格式 (例如: https://example.com)');
+            return;
+        }
+        
+        if (this.formMode === 'add') {
+            // 添加新站点
+            const newSiteId = 'site_' + Date.now();
+            const newSite = {
+                id: newSiteId,
+                name: siteName,
+                url: siteUrl,
+                desc: siteDesc,
+                icon: siteIcon
+            };
+            
+            // 添加到当前选择的分类
+            this.sitesData[this.currentCategoryIndex].sites.push(newSite);
+            
+            this.showMessage(`已添加网站 "${siteName}"`, 'success');
+        } else if (this.formMode === 'edit') {
+            // 编辑现有站点
+            if (this.currentCategoryIndex >= 0 && this.currentCategoryIndex < this.sitesData.length &&
+                this.currentSiteIndex >= 0 && this.currentSiteIndex < this.sitesData[this.currentCategoryIndex].sites.length) {
+                
+                const site = this.sitesData[this.currentCategoryIndex].sites[this.currentSiteIndex];
+                site.name = siteName;
+                site.url = siteUrl;
+                site.icon = siteIcon;
+                site.desc = siteDesc;
+                
+                this.showMessage(`已更新网站 "${siteName}"`, 'success');
+            }
+        }
+        
+        // 隐藏表单
+        this.hideSiteForm();
+        
+        // 重新渲染站点列表
+        this.renderSitesList(this.currentCategoryIndex);
+        
+        // 更新JSON编辑器
+        this.updateJsonEditor();
+    },
+    
+    // 验证URL格式
+    isValidUrl(url) {
+        try {
+            new URL(url);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    },
+    
+    // 更新JSON编辑器
+    updateJsonEditor() {
+        const sitesEditor = document.getElementById('sites-editor');
+        if (sitesEditor) {
+            sitesEditor.value = JSON.stringify(this.sitesData, null, 2);
+        }
+    },
+    
+    // 处理分类选择事件（站点管理选项卡）
+    handleCategorySelect() {
+        const categorySelect = document.getElementById('category-select');
+        const addSiteBtn = document.getElementById('add-site-btn');
+        const selectMessage = document.getElementById('select-category-message');
+        const sitesList = document.getElementById('sites-list');
+        
+        if (!categorySelect) return;
+        
+        const selectedValue = categorySelect.value;
+        
+        // 设置添加站点按钮状态
+        if (addSiteBtn) {
+            addSiteBtn.disabled = selectedValue === '';
+        }
+        
+        if (selectedValue === '') {
+            // 未选择分类
+            this.currentCategoryIndex = -1;
+            
+            // 显示提示信息，隐藏站点列表
+            if (selectMessage) selectMessage.classList.remove('d-none');
+            if (sitesList) sitesList.classList.add('d-none');
+        } else {
+            // 选择了分类
+            this.currentCategoryIndex = parseInt(selectedValue);
+            
+            // 隐藏提示信息，显示站点列表
+            if (selectMessage) selectMessage.classList.add('d-none');
+            if (sitesList) sitesList.classList.remove('d-none');
+            
+            // 加载该分类的站点列表
+            this.renderSitesList(this.currentCategoryIndex);
+        }
+    },
+    
     // 处理保存站点数据
     async handleSaveSites() {
         const editError = document.getElementById('edit-error');
@@ -283,39 +704,44 @@ const App = {
         if (!sitesEditor || !editError) return;
         
         try {
-            // 解析JSON数据
+            // 处理当前活跃的选项卡
+            const jsonTab = document.querySelector('#json-tab.active');
             let newSitesData;
-            try {
-                newSitesData = JSON.parse(sitesEditor.value);
-                if (!Array.isArray(newSitesData)) {
-                    throw new Error('数据格式无效，应为数组');
+            
+            if (jsonTab) {
+                // 如果激活的是JSON编辑选项卡，解析JSON数据
+                try {
+                    newSitesData = JSON.parse(sitesEditor.value);
+                    if (!Array.isArray(newSitesData)) {
+                        throw new Error('数据格式无效，应为数组');
+                    }
+                } catch (e) {
+                    editError.textContent = `JSON解析错误: ${e.message}`;
+                    editError.classList.remove('d-none');
+                    return;
                 }
-            } catch (e) {
-                editError.textContent = `JSON解析错误: ${e.message}`;
-                editError.classList.remove('d-none');
-                return;
+                
+                // 验证数据结构
+                const isValid = this.validateSitesData(newSitesData);
+                if (!isValid.valid) {
+                    editError.textContent = isValid.error;
+                    editError.classList.remove('d-none');
+                    return;
+                }
+                
+                // 更新数据
+                this.sitesData = newSitesData;
             }
             
-            // 验证数据结构
-            const isValid = this.validateSitesData(newSitesData);
-            if (!isValid.valid) {
-                editError.textContent = isValid.error;
-                editError.classList.remove('d-none');
-                return;
-            }
+            // 保存数据到服务器
+            await SitesManager.updateSites(this.sitesData);
             
-            // 保存数据
-            await SitesManager.updateSites(newSitesData);
-            
-            // 更新本地数据并重新渲染
-            this.sitesData = newSitesData;
+            // 重新渲染站点数据
             this.renderSites();
             
             // 关闭模态框
             const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-            if (editModal) {
-                editModal.hide();
-            }
+            editModal.hide();
             
             // 显示成功提示
             this.showMessage('站点数据已成功保存', 'success');
@@ -383,16 +809,294 @@ const App = {
         const sitesEditor = document.getElementById('sites-editor');
         const editError = document.getElementById('edit-error');
         
-        if (sitesEditor) {
-            // 填充当前站点数据
-            sitesEditor.value = JSON.stringify(this.sitesData, null, 2);
-        }
-        
+        // 重置错误信息
         if (editError) {
             editError.classList.add('d-none');
         }
         
+        // 填充JSON编辑器内容
+        if (sitesEditor) {
+            sitesEditor.value = JSON.stringify(this.sitesData, null, 2);
+        }
+        
+        // 填充分类列表
+        this.renderCategoriesList();
+        
+        // 填充分类选择下拉框
+        this.populateCategorySelect();
+        
+        // 显示模态框
         editModal.show();
+    },
+    
+    // 渲染分类列表（用于分类管理选项卡）
+    renderCategoriesList() {
+        const categoriesList = document.getElementById('categories-list');
+        if (!categoriesList) return;
+        
+        categoriesList.innerHTML = '';
+        
+        if (!this.sitesData || this.sitesData.length === 0) {
+            categoriesList.innerHTML = `
+                <div class="alert alert-info">
+                    暂无分类数据，请点击"添加分类"按钮创建
+                </div>
+            `;
+            return;
+        }
+        
+        this.sitesData.forEach((category, index) => {
+            const categoryItem = document.createElement('div');
+            categoryItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            categoryItem.innerHTML = `
+                <div>
+                    <span class="badge bg-primary rounded-pill me-2">${category.sites.length}</span>
+                    ${category.name}
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-primary edit-category-btn" data-index="${index}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-category-btn" data-index="${index}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `;
+            categoriesList.appendChild(categoryItem);
+        });
+        
+        // 添加编辑和删除按钮的事件监听
+        const editButtons = categoriesList.querySelectorAll('.edit-category-btn');
+        editButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = parseInt(btn.getAttribute('data-index'));
+                this.editCategory(index);
+            });
+        });
+        
+        const deleteButtons = categoriesList.querySelectorAll('.delete-category-btn');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = parseInt(btn.getAttribute('data-index'));
+                this.deleteCategory(index);
+            });
+        });
+    },
+    
+    // 填充分类选择下拉框（用于站点管理选项卡）
+    populateCategorySelect() {
+        const categorySelect = document.getElementById('category-select');
+        const addSiteBtn = document.getElementById('add-site-btn');
+        
+        if (!categorySelect) return;
+        
+        // 清空并添加默认选项
+        categorySelect.innerHTML = '<option value="">-- 请选择分类 --</option>';
+        
+        // 如果没有分类数据
+        if (!this.sitesData || this.sitesData.length === 0) {
+            categorySelect.disabled = true;
+            if (addSiteBtn) addSiteBtn.disabled = true;
+            return;
+        }
+        
+        // 添加所有分类选项
+        categorySelect.disabled = false;
+        this.sitesData.forEach((category, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
+        
+        // 设置"添加站点"按钮的初始状态
+        if (addSiteBtn) addSiteBtn.disabled = true;
+        
+        // 添加选择事件
+        categorySelect.addEventListener('change', () => {
+            const selectedIndex = categorySelect.value;
+            
+            // 启用/禁用"添加站点"按钮
+            if (addSiteBtn) {
+                addSiteBtn.disabled = selectedIndex === '';
+            }
+            
+            if (selectedIndex !== '') {
+                // 保存当前选择的分类索引
+                this.currentCategoryIndex = parseInt(selectedIndex);
+                
+                // 渲染该分类下的站点列表
+                this.renderSitesList(this.currentCategoryIndex);
+            } else {
+                // 隐藏站点列表，显示提示信息
+                const sitesList = document.getElementById('sites-list');
+                const selectMessage = document.getElementById('select-category-message');
+                
+                if (sitesList) sitesList.classList.add('d-none');
+                if (selectMessage) selectMessage.classList.remove('d-none');
+            }
+        });
+    },
+    
+    // 渲染站点列表（用于站点管理选项卡）
+    renderSitesList(categoryIndex) {
+        const sitesList = document.getElementById('sites-list');
+        const selectMessage = document.getElementById('select-category-message');
+        
+        if (!sitesList || categoryIndex < 0 || categoryIndex >= this.sitesData.length) return;
+        
+        // 显示站点列表，隐藏提示信息
+        sitesList.classList.remove('d-none');
+        if (selectMessage) selectMessage.classList.add('d-none');
+        
+        // 获取当前分类
+        const category = this.sitesData[categoryIndex];
+        
+        // 清空列表
+        sitesList.innerHTML = '';
+        
+        // 如果该分类下没有站点
+        if (!category.sites || category.sites.length === 0) {
+            sitesList.innerHTML = `
+                <div class="alert alert-info">
+                    此分类下暂无站点数据，请点击"添加网站"按钮创建
+                </div>
+            `;
+            return;
+        }
+        
+        // 添加所有站点项
+        category.sites.forEach((site, index) => {
+            const siteItem = document.createElement('div');
+            siteItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            siteItem.innerHTML = `
+                <div class="d-flex align-items-center">
+                    ${site.icon ? `<img src="${site.icon}" alt="${site.name}" class="site-icon me-2">` : ''}
+                    <div>
+                        <h6 class="mb-0">${site.name}</h6>
+                        <small class="text-muted">${site.url}</small>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-primary edit-site-btn" data-index="${index}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-site-btn" data-index="${index}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `;
+            sitesList.appendChild(siteItem);
+        });
+        
+        // 添加编辑和删除按钮的事件监听
+        const editButtons = sitesList.querySelectorAll('.edit-site-btn');
+        editButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = parseInt(btn.getAttribute('data-index'));
+                this.editSite(categoryIndex, index);
+            });
+        });
+        
+        const deleteButtons = sitesList.querySelectorAll('.delete-site-btn');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = parseInt(btn.getAttribute('data-index'));
+                this.deleteSite(categoryIndex, index);
+            });
+        });
+    },
+    
+    // 编辑分类
+    editCategory(index) {
+        if (index < 0 || index >= this.sitesData.length) return;
+        
+        this.currentCategoryIndex = index;
+        this.formMode = 'edit';
+        
+        // 获取分类数据
+        const category = this.sitesData[index];
+        
+        // 填充表单
+        const categoryIdInput = document.getElementById('category-id');
+        const categoryNameInput = document.getElementById('category-name');
+        const categoryFormTitle = document.getElementById('category-form-title');
+        const categoryFormCard = document.getElementById('category-form-card');
+        
+        if (categoryIdInput) categoryIdInput.value = category.id;
+        if (categoryNameInput) categoryNameInput.value = category.name;
+        if (categoryFormTitle) categoryFormTitle.textContent = '编辑分类';
+        if (categoryFormCard) categoryFormCard.classList.remove('d-none');
+    },
+    
+    // 删除分类
+    deleteCategory(index) {
+        if (index < 0 || index >= this.sitesData.length) return;
+        
+        // 确认删除
+        if (!confirm(`确定删除分类 "${this.sitesData[index].name}" 及其所有网站吗？`)) return;
+        
+        // 删除分类
+        this.sitesData.splice(index, 1);
+        
+        // 重新渲染分类列表
+        this.renderCategoriesList();
+        
+        // 重新渲染分类选择下拉框
+        this.populateCategorySelect();
+        
+        // 更新JSON编辑器
+        this.updateJsonEditor();
+        
+        this.showMessage(`分类已删除`, 'success');
+    },
+    
+    // 编辑站点
+    editSite(categoryIndex, siteIndex) {
+        if (categoryIndex < 0 || categoryIndex >= this.sitesData.length || siteIndex < 0 || siteIndex >= this.sitesData[categoryIndex].sites.length) return;
+        
+        this.currentCategoryIndex = categoryIndex;
+        this.currentSiteIndex = siteIndex;
+        this.formMode = 'edit';
+        
+        // 获取站点数据
+        const site = this.sitesData[categoryIndex].sites[siteIndex];
+        
+        // 填充表单
+        const siteIdInput = document.getElementById('site-id');
+        const siteNameInput = document.getElementById('site-name');
+        const siteUrlInput = document.getElementById('site-url');
+        const siteIconInput = document.getElementById('site-icon');
+        const siteDescInput = document.getElementById('site-desc');
+        const siteFormTitle = document.getElementById('site-form-title');
+        const siteFormCard = document.getElementById('site-form-card');
+        
+        if (siteIdInput) siteIdInput.value = site.id;
+        if (siteNameInput) siteNameInput.value = site.name;
+        if (siteUrlInput) siteUrlInput.value = site.url;
+        if (siteIconInput) siteIconInput.value = site.icon || '';
+        if (siteDescInput) siteDescInput.value = site.desc || '';
+        if (siteFormTitle) siteFormTitle.textContent = '编辑站点';
+        if (siteFormCard) siteFormCard.classList.remove('d-none');
+    },
+    
+    // 删除站点
+    deleteSite(categoryIndex, siteIndex) {
+        if (categoryIndex < 0 || categoryIndex >= this.sitesData.length || siteIndex < 0 || siteIndex >= this.sitesData[categoryIndex].sites.length) return;
+        
+        const siteName = this.sitesData[categoryIndex].sites[siteIndex].name;
+        
+        if (confirm(`确定要删除网站 "${siteName}" 吗？`)) {
+            this.sitesData[categoryIndex].sites.splice(siteIndex, 1);
+            
+            // 重新渲染站点列表
+            this.renderSitesList(categoryIndex);
+            
+            // 更新JSON编辑器
+            this.updateJsonEditor();
+            
+            this.showMessage(`网站已删除`, 'success');
+        }
     },
     
     // 检查管理员状态
@@ -403,46 +1107,202 @@ const App = {
     
     // 显示错误信息
     showError(message) {
-        this.showMessage(message, 'danger');
+        const editError = document.getElementById('edit-error');
+        if (editError) {
+            editError.textContent = message;
+            editError.classList.remove('d-none');
+        }
     },
     
-    // 显示消息通知
-    showMessage(message, type = 'primary') {
-        // 创建Toast元素
-        const toastId = 'toast-' + Date.now();
-        const toast = document.createElement('div');
-        toast.className = `toast align-items-center text-white bg-${type} border-0`;
-        toast.setAttribute('role', 'alert');
-        toast.setAttribute('aria-live', 'assertive');
-        toast.setAttribute('aria-atomic', 'true');
-        toast.setAttribute('id', toastId);
+    // 隐藏所有错误消息
+    hideErrorMessages() {
+        const errorElements = document.querySelectorAll('.alert-danger');
+        errorElements.forEach(element => {
+            element.classList.add('d-none');
+            element.textContent = '';
+        });
+    },
+    
+    // 显示提示消息
+    showMessage(message, type = 'info') {
+        const messageContainer = document.getElementById('message-container');
+        if (!messageContainer) return;
         
-        toast.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body">
-                    ${message}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.role = 'alert';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         `;
         
-        // 添加到页面
-        const toastContainer = document.createElement('div');
-        toastContainer.className = 'toast-container position-fixed bottom-0 start-50 translate-middle-x p-3';
-        toastContainer.appendChild(toast);
-        document.body.appendChild(toastContainer);
+        messageContainer.appendChild(alertDiv);
         
-        // 创建Bootstrap Toast实例
-        const toastInstance = new bootstrap.Toast(toast);
+        // 5秒后自动关闭
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.classList.remove('show');
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 150);
+            }
+        }, 5000);
+    },
+    
+    // 渲染分类列表
+    renderCategoriesList() {
+        const categoriesList = document.getElementById('categories-list');
+        if (!categoriesList) return;
         
-        // 显示通知
-        toastInstance.show();
+        categoriesList.innerHTML = '';
         
-        // 在关闭后删除元素
-        toast.addEventListener('hidden.bs.toast', () => {
-            toastContainer.remove();
+        if (this.sitesData.length === 0) {
+            categoriesList.innerHTML = '<div class="alert alert-info">没有分类，请添加一个新分类。</div>';
+            return;
+        }
+        
+        this.sitesData.forEach((category, index) => {
+            const categoryItem = document.createElement('div');
+            categoryItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            categoryItem.innerHTML = `
+                <div>
+                    <h5 class="mb-1">${category.name}</h5>
+                    <small class="text-muted">${category.sites.length} 个网站</small>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-primary edit-category-btn" data-index="${index}">
+                        <i class="bi bi-pencil"></i> 编辑
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-category-btn" data-index="${index}">
+                        <i class="bi bi-trash"></i> 删除
+                    </button>
+                </div>
+            `;
+            categoriesList.appendChild(categoryItem);
         });
-    }
+        
+        // 添加编辑和删除按钮事件监听器
+        const editButtons = categoriesList.querySelectorAll('.edit-category-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.dataset.index);
+                this.editCategory(index);
+            });
+        });
+        
+        const deleteButtons = categoriesList.querySelectorAll('.delete-category-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.dataset.index);
+                this.deleteCategory(index);
+            });
+        });
+    },
+    
+    // 填充分类选择下拉框
+    populateCategorySelect() {
+        const categorySelect = document.getElementById('category-select');
+        if (!categorySelect) return;
+        
+        // 清空当前选项
+        categorySelect.innerHTML = '';
+        
+        // 添加默认选项
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = '-- 请选择分类 --';
+        categorySelect.appendChild(defaultOption);
+        
+        // 添加分类选项
+        this.sitesData.forEach((category, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
+        
+        // 重置当前选择的分类和站点
+        this.currentCategoryIndex = -1;
+        this.currentSiteIndex = -1;
+        
+        // 处理分类选择变化
+        this.handleCategorySelect();
+    },
+    
+    // 渲染站点列表
+    renderSitesList(categoryIndex) {
+        const sitesList = document.getElementById('sites-list');
+        if (!sitesList) return;
+        
+        sitesList.innerHTML = '';
+        
+        if (categoryIndex < 0 || categoryIndex >= this.sitesData.length) {
+            return;
+        }
+        
+        const category = this.sitesData[categoryIndex];
+        
+        if (category.sites.length === 0) {
+            sitesList.innerHTML = '<div class="alert alert-info">该分类下没有网站，请添加一个新网站。</div>';
+            return;
+        }
+        
+        category.sites.forEach((site, index) => {
+            const siteItem = document.createElement('div');
+            siteItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            
+            let iconHtml = '';
+            if (site.icon) {
+                iconHtml = `<img src="${site.icon}" alt="${site.name}" class="me-2" style="width: 24px; height: 24px;">`;
+            } else {
+                iconHtml = `<i class="bi bi-globe me-2"></i>`;
+            }
+            
+            siteItem.innerHTML = `
+                <div class="d-flex align-items-center">
+                    ${iconHtml}
+                    <div>
+                        <h5 class="mb-1">${site.name}</h5>
+                        <small class="text-muted">
+                            <a href="${site.url}" target="_blank">${site.url}</a>
+                        </small>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-primary edit-site-btn" 
+                        data-category-index="${categoryIndex}" data-site-index="${index}">
+                        <i class="bi bi-pencil"></i> 编辑
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-site-btn"
+                        data-category-index="${categoryIndex}" data-site-index="${index}">
+                        <i class="bi bi-trash"></i> 删除
+                    </button>
+                </div>
+            `;
+            sitesList.appendChild(siteItem);
+        });
+        
+        // 添加编辑和删除按钮事件监听器
+        const editButtons = sitesList.querySelectorAll('.edit-site-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const categoryIndex = parseInt(e.currentTarget.dataset.categoryIndex);
+                const siteIndex = parseInt(e.currentTarget.dataset.siteIndex);
+                this.editSite(categoryIndex, siteIndex);
+            });
+        });
+        
+        const deleteButtons = sitesList.querySelectorAll('.delete-site-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const categoryIndex = parseInt(e.currentTarget.dataset.categoryIndex);
+                const siteIndex = parseInt(e.currentTarget.dataset.siteIndex);
+                this.deleteSite(categoryIndex, siteIndex);
+            });
+        });
+    },
 };
 
 // 页面加载完成后初始化应用
