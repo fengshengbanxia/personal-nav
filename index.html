@@ -63,6 +63,22 @@
                     </div>
                 </div>
                 
+                <!-- 令牌调试信息 -->
+                <div id="token-debug-panel" class="alert alert-info mb-3 d-none">
+                    <div class="d-flex justify-content-between">
+                        <h5><i class="bi bi-key-fill me-2"></i>令牌信息</h5>
+                        <button id="refresh-token-info" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-arrow-clockwise"></i> 刷新
+                        </button>
+                    </div>
+                    <hr>
+                    <div id="token-info-content">
+                        <p><strong>KV存储令牌:</strong> <span id="kv-token-status">加载中...</span></p>
+                        <p><strong>环境变量令牌:</strong> <span id="env-token-status">加载中...</span></p>
+                        <p><strong>当前使用来源:</strong> <span id="active-token-source">加载中...</span></p>
+                    </div>
+                </div>
+                
                 <!-- 搜索框 -->
                 <div class="search-container">
                     <input type="text" id="search-input" class="form-control" placeholder="探索星辰大海...">

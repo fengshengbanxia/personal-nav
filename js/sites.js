@@ -252,6 +252,26 @@ const SitesManager = {
             console.error('初始化令牌失败:', error);
             return { success: false, error: error.message };
         }
+    },
+    
+    // 获取令牌调试信息
+    async getTokenDebugInfo() {
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/debug/token-info`);
+            
+            if (!response.ok) {
+                throw new Error(`API响应错误: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('获取令牌调试信息失败:', error);
+            return { 
+                success: false, 
+                error: error.message
+            };
+        }
     }
 };
 

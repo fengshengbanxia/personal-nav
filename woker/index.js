@@ -56,6 +56,10 @@ async function handleApiRequest(request, path, corsHeaders) {
     else if (apiPath === 'auth/verify') {
       return await handleTokenVerification(request, corsHeaders);
     }
+    // 获取令牌信息 - 用于调试显示
+    else if (apiPath === 'debug/token-info') {
+      return await getTokenDebugInfo(corsHeaders);
+    }
   } 
   // 需要认证的POST请求
   else if (request.method === 'POST') {
@@ -232,6 +236,57 @@ async function validateAdminToken(request) {
       valid: false, 
       error: '令牌验证过程中发生内部错误' 
     };
+  }
+}
+
+// 获取令牌调试信息
+async function getTokenDebugInfo(corsHeaders) {
+  try {
+    // 获取存储的令牌信息
+    let kvToken = '未设置';
+    let envToken = '未设置';
+    let tokenSource = '无';
+    
+    // 尝试从KV存储获取令牌
+    try {
+      const storedToken = await KV_CONFIG.get('api_token');
+      if (storedToken) {
+        // 为安全起见，只显示令牌的哈希和长度
+        kvToken = `已设置 (长度: ${storedToken.length})`;
+      }
+    } catch (e) {
+      kvToken = `读取错误: ${e.message}`;
+    }
+    
+    // 尝试从环境变量获取令牌
+    if (typeof API_TOKEN !== 'undefined') {
+      // 为安全起见，只显示令牌的长度
+      envToken = `已设置 (长度: ${API_TOKEN.length})`;
+    }
+    
+    // 确定当前使用的令牌来源
+    if (typeof API_TOKEN !== 'undefined') {
+      tokenSource = '环境变量 (优先)';
+    } else {
+      const storedToken = await KV_CONFIG.get('api_token');
+      if (storedToken) {
+        tokenSource = 'KV存储';
+      }
+    }
+    
+    // 返回信息
+    return jsonResponse({
+      success: true,
+      kv_token_status: kvToken,
+      env_token_status: envToken,
+      active_source: tokenSource
+    }, corsHeaders);
+  } catch (e) {
+    console.error('获取令牌信息时发生错误:', e);
+    return jsonResponse({ 
+      success: false, 
+      error: '获取令牌信息失败' 
+    }, corsHeaders, 500);
   }
 }
 

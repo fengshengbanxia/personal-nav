@@ -61,6 +61,9 @@ const App = {
         this.updateDateTimeWidgets();
         this.renderCategoryNav();
         
+        // 加载令牌调试信息
+        await this.loadTokenDebugInfo();
+        
         // 设置事件监听器
         this.setupEventListeners();
         
@@ -271,6 +274,15 @@ const App = {
         const initTokenSubmit = document.getElementById('init-token-submit');
         if (initTokenSubmit) {
             initTokenSubmit.addEventListener('click', () => this.handleInitToken());
+        }
+        
+        // 刷新令牌信息按钮
+        const refreshTokenInfoBtn = document.getElementById('refresh-token-info');
+        if (refreshTokenInfoBtn) {
+            refreshTokenInfoBtn.addEventListener('click', async () => {
+                await this.loadTokenDebugInfo();
+                this.showMessage('令牌信息已刷新', 'info');
+            });
         }
         
         // 保存站点按钮
@@ -1626,6 +1638,48 @@ const App = {
             saveBtn.addEventListener('click', () => {
                 this.handleSaveSites();
             });
+        }
+    },
+    
+    // 加载令牌调试信息
+    async loadTokenDebugInfo() {
+        const debugPanel = document.getElementById('token-debug-panel');
+        const kvTokenStatus = document.getElementById('kv-token-status');
+        const envTokenStatus = document.getElementById('env-token-status');
+        const activeTokenSource = document.getElementById('active-token-source');
+        
+        if (!debugPanel || !kvTokenStatus || !envTokenStatus || !activeTokenSource) return;
+        
+        try {
+            // 显示调试面板
+            debugPanel.classList.remove('d-none');
+            
+            // 设置加载中状态
+            kvTokenStatus.textContent = '加载中...';
+            envTokenStatus.textContent = '加载中...';
+            activeTokenSource.textContent = '加载中...';
+            
+            // 获取令牌信息
+            const result = await SitesManager.getTokenDebugInfo();
+            
+            if (result.success) {
+                // 更新显示
+                kvTokenStatus.textContent = result.kv_token_status;
+                envTokenStatus.textContent = result.env_token_status;
+                activeTokenSource.textContent = result.active_source;
+            } else {
+                // 显示错误
+                kvTokenStatus.textContent = '获取失败';
+                envTokenStatus.textContent = '获取失败';
+                activeTokenSource.textContent = '获取失败';
+                console.error('获取令牌调试信息失败:', result.error);
+            }
+        } catch (error) {
+            // 处理异常
+            kvTokenStatus.textContent = '获取失败';
+            envTokenStatus.textContent = '获取失败';
+            activeTokenSource.textContent = '获取失败';
+            console.error('获取令牌调试信息过程中发生错误:', error);
         }
     },
 };

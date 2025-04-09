@@ -522,3 +522,43 @@ body {
         display: none;
     }
 }
+
+/* 令牌调试面板样式 */
+#token-debug-panel {
+    background-color: #f8f9fa;
+    border-left: 4px solid #17a2b8;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#token-debug-panel h5 {
+    color: #17a2b8;
+    margin-bottom: 0;
+}
+
+#token-info-content p {
+    margin-bottom: 8px;
+}
+
+#token-info-content strong {
+    color: #495057;
+}
+
+#refresh-token-info {
+    font-size: 0.85rem;
+    padding: 0.2rem 0.5rem;
+}
+
+/* 在暗黑模式下的样式 */
+.dark-theme #token-debug-panel {
+    background-color: #2d3748;
+    border-left-color: #4fd1c5;
+}
+
+.dark-theme #token-debug-panel h5 {
+    color: #4fd1c5;
+}
+
+.dark-theme #token-info-content strong {
+    color: #e2e8f0;
+}
