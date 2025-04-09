@@ -46,13 +46,13 @@ const ThemeManager = {
         const themeInfo = this.themes[theme] || this.themes.light;
         
         // 应用主题类
-        if (themeInfo.type === 'dark') {
+        if (theme === 'dark') {
             document.body.classList.add('dark-theme');
-        }
-        
-        if (theme === 'purple') {
+        } else if (theme === 'purple') {
+            document.body.classList.add('dark-theme'); // 基础深色
             document.body.classList.add('purple-theme');
         } else if (theme === 'red') {
+            document.body.classList.add('dark-theme'); // 基础深色
             document.body.classList.add('red-theme');
         } else if (theme === 'custom') {
             document.body.classList.add('custom-theme');
@@ -205,11 +205,6 @@ const ThemeManager = {
             // 为主题按钮添加下拉菜单属性
             themeToggle.setAttribute('data-bs-toggle', 'dropdown');
             themeToggle.setAttribute('aria-expanded', 'false');
-            
-            // 点击主题按钮时切换主题
-            themeToggle.addEventListener('click', (e) => {
-                // 下拉菜单会自动处理，不需要额外代码
-            });
         }
         
         // 监听系统主题变化

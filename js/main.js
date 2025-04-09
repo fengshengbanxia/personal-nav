@@ -322,8 +322,6 @@ const App = {
         this.initJsonEditor();
         // 设置保存按钮事件
         this.initSaveSitesButton();
-        // 设置图标获取功能
-        this.initIconFetcher();
     },
     
     // 处理管理员登录
@@ -1362,81 +1360,6 @@ const App = {
             </div>
         `;
         container.innerHTML = categoryHtml;
-    },
-    
-    // 初始化图标获取器
-    initIconFetcher() {
-        const fetchIconBtn = document.getElementById('fetch-icon-btn');
-        const siteUrlInput = document.getElementById('site-url');
-        const siteIconInput = document.getElementById('site-icon');
-        
-        if (fetchIconBtn && siteUrlInput && siteIconInput) {
-            fetchIconBtn.addEventListener('click', () => {
-                const url = siteUrlInput.value.trim();
-                if (!url) {
-                    this.showToast('请先输入站点URL', 'warning');
-                    return;
-                }
-                
-                // 显示加载状态
-                fetchIconBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-                fetchIconBtn.disabled = true;
-                
-                // 使用抓取服务获取图标
-                this.fetchIconFromUrl(url)
-                    .then(iconUrl => {
-                        if (iconUrl) {
-                            siteIconInput.value = iconUrl;
-                            this.showToast('成功获取图标', 'success');
-                        } else {
-                            this.showToast('无法获取图标，请手动输入', 'warning');
-                        }
-                    })
-                    .catch(err => {
-                        console.error('获取图标时出错:', err);
-                        this.showToast('获取图标失败，请手动输入', 'error');
-                    })
-                    .finally(() => {
-                        // 恢复按钮状态
-                        fetchIconBtn.innerHTML = '<i class="bi bi-download"></i>';
-                        fetchIconBtn.disabled = false;
-                    });
-            });
-        }
-    },
-    
-    // 从URL获取网站图标
-    async fetchIconFromUrl(url) {
-        try {
-            // 提取域名
-            let domain = url;
-            if (!domain.startsWith('http')) {
-                domain = 'https://' + domain;
-            }
-            
-            const urlObj = new URL(domain);
-            const hostname = urlObj.hostname;
-            
-            // 使用图标API服务获取图标
-            const iconApiUrl = `https://gonglue.qinggl.com/app/img/icon.jsp?url=${encodeURIComponent(hostname)}`;
-            
-            // 如果是在浏览器中，可以直接返回API URL
-            return iconApiUrl;
-            
-            // 注意：如果需要先验证图标是否存在，可以使用下面的代码代替
-            /*
-            const response = await fetch(iconApiUrl);
-            if (response.ok) {
-                return iconApiUrl;
-            }
-            
-            // 备用方案：尝试获取网站的favicon
-            return `https://${hostname}/favicon.ico`;
-            */
-        } catch (err) {
-            console.error('解析URL时出错:', err);
-            return null;
-        }
     },
     
     // 初始化分类表单相关事件
