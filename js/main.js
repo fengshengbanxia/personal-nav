@@ -375,6 +375,11 @@ const App = {
             return;
         }
         
+        // 显示正在验证的状态
+        loginError.textContent = '正在验证令牌...';
+        loginError.className = 'alert alert-info';
+        loginError.classList.remove('d-none');
+        
         try {
             // 验证令牌
             const result = await SitesManager.verifyToken(apiKey);
@@ -383,24 +388,33 @@ const App = {
                 // 登录成功
                 this.isAdmin = true;
                 
-                // 关闭登录模态框
-                const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                if (loginModal) {
-                    loginModal.hide();
-                }
+                // 显示详细成功信息
+                loginError.textContent = '验证成功！令牌匹配。即将进入管理界面...';
+                loginError.className = 'alert alert-success';
                 
-                // 重新渲染以显示管理员选项
-                this.renderSites();
-                
-                // 显示成功提示
-                this.showMessage('管理员登录成功', 'success');
+                // 延迟关闭模态框，让用户看到成功消息
+                setTimeout(() => {
+                    // 关闭登录模态框
+                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    if (loginModal) {
+                        loginModal.hide();
+                    }
+                    
+                    // 重新渲染以显示管理员选项
+                    this.renderSites();
+                    
+                    // 显示成功提示
+                    this.showMessage('管理员登录成功', 'success');
+                }, 1500);
             } else {
                 // 显示错误
-                loginError.textContent = result.error || '验证失败';
+                loginError.textContent = `验证失败：${result.error || '令牌不匹配'}`;
+                loginError.className = 'alert alert-danger';
                 loginError.classList.remove('d-none');
             }
         } catch (error) {
-            loginError.textContent = '验证过程中发生错误';
+            loginError.textContent = `验证过程中发生错误: ${error.message || '未知错误'}`;
+            loginError.className = 'alert alert-danger';
             loginError.classList.remove('d-none');
             console.error('登录失败:', error);
         }

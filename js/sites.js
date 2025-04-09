@@ -142,6 +142,8 @@ const SitesManager = {
     // 验证API令牌
     async verifyToken(token) {
         try {
+            console.log(`开始验证令牌，长度: ${token.length}`);
+            
             // 使用新的专用验证端点
             const response = await fetch(`${this.apiBaseUrl}/auth/verify`, {
                 method: 'GET',
@@ -150,10 +152,13 @@ const SitesManager = {
                 }
             });
             
+            console.log(`收到验证响应，状态码: ${response.status}`);
+            
             // 解析响应JSON
             let data;
             try {
                 data = await response.json();
+                console.log('验证响应数据:', data);
             } catch (parseError) {
                 console.error('解析验证响应失败:', parseError);
                 return { success: false, error: '无法解析服务器响应' };
@@ -163,6 +168,7 @@ const SitesManager = {
             if (response.ok) {
                 // 只有当服务器明确报告成功时才保存令牌
                 if (data && data.success === true) {
+                    console.log('验证成功，保存令牌');
                     // 保存有效的令牌
                     this.token = token;
                     localStorage.setItem('api_token', token);

@@ -104,13 +104,17 @@ async function handleApiRequest(request, path, corsHeaders) {
 // 处理令牌验证请求
 async function handleTokenVerification(request, corsHeaders) {
   try {
+    console.log('收到令牌验证请求');
     // 从请求头获取API密钥
     const validationResult = await validateAdminToken(request);
+    
+    // 记录验证结果（不显示令牌内容）
+    console.log(`验证结果: ${validationResult.valid ? '成功' : '失败'}, 原因: ${validationResult.error || '令牌匹配'}`);
     
     if (validationResult.valid) {
       return jsonResponse({ 
         success: true,
-        message: '令牌验证成功'
+        message: '令牌验证成功，与KV存储中的令牌匹配'
       }, corsHeaders);
     } else {
       return jsonResponse({ 
@@ -172,7 +176,10 @@ async function validateAdminToken(request) {
   try {
     // 从请求头获取API密钥
     const authHeader = request.headers.get('Authorization');
+    console.log(`验证请求头: ${authHeader ? '存在Authorization头' : '缺少Authorization头'}`);
+    
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log('验证失败: 缺少Bearer令牌');
       return { 
         valid: false, 
         error: '未提供认证令牌或格式不正确' 
@@ -180,35 +187,44 @@ async function validateAdminToken(request) {
     }
     
     const token = authHeader.replace('Bearer ', '');
+    console.log(`收到令牌，长度: ${token.length}`);
     
     // 获取存储的API令牌
     let storedToken;
+    let tokenSource = '';
     
     // 尝试从环境变量获取令牌
     if (typeof API_TOKEN !== 'undefined') {
       // 如果API_TOKEN作为全局变量存在（环境变量方式）
       storedToken = API_TOKEN;
+      tokenSource = '环境变量';
+      console.log('从环境变量获取到了令牌');
     } else {
       // 从KV获取存储的API令牌
       storedToken = await KV_CONFIG.get('api_token');
+      tokenSource = 'KV存储';
+      console.log(`从KV存储获取令牌: ${storedToken ? '成功' : '失败'}`);
     }
     
     // 验证存储的令牌
     if (!storedToken || typeof storedToken !== 'string' || storedToken.length === 0) {
+      console.log(`验证失败: 存储的令牌无效 [来源:${tokenSource}]`);
       return { 
         valid: false, 
-        error: '管理员令牌未配置或无效' 
+        error: `管理员令牌未配置或无效 [来源:${tokenSource}]` 
       };
     }
     
+    console.log(`验证令牌: 长度比较 ${token.length} vs ${storedToken.length}`);
     // 安全的时间常数比较
     const tokenMatches = token.length === storedToken.length && 
                          token === storedToken;
     
+    console.log(`验证结果: ${tokenMatches ? '令牌匹配' : '令牌不匹配'} [来源:${tokenSource}]`);
     // 返回验证结果
     return { 
       valid: tokenMatches,
-      error: tokenMatches ? null : '令牌不匹配'
+      error: tokenMatches ? null : `令牌不匹配 [来源:${tokenSource}]`
     };
   } catch (e) {
     console.error('令牌验证过程中发生错误:', e);
