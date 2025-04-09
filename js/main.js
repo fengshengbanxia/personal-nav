@@ -314,95 +314,16 @@ const App = {
     
     // 初始化编辑模态框
     initEditModal() {
-        // 选项卡切换事件
-        const categoryTab = document.getElementById('category-tab');
-        const siteTab = document.getElementById('site-tab');
-        const jsonTab = document.getElementById('json-tab');
-        
-        if (categoryTab) {
-            categoryTab.addEventListener('click', () => {
-                this.hideErrorMessages();
-                this.renderCategoriesList();
-            });
-        }
-        
-        if (siteTab) {
-            siteTab.addEventListener('click', () => {
-                this.hideErrorMessages();
-                this.populateCategorySelect();
-            });
-        }
-        
-        if (jsonTab) {
-            jsonTab.addEventListener('click', () => {
-                this.hideErrorMessages();
-                this.updateJsonEditor();
-            });
-        }
-        
-        // 绑定添加分类按钮事件
-        const addCategoryBtn = document.getElementById('add-category-btn');
-        if (addCategoryBtn) {
-            addCategoryBtn.addEventListener('click', () => {
-                this.showCategoryForm('add');
-            });
-        }
-        
-        // 绑定分类表单提交事件
-        const saveCategoryBtn = document.getElementById('save-category-btn');
-        if (saveCategoryBtn) {
-            saveCategoryBtn.addEventListener('click', () => {
-                this.saveCategoryForm();
-            });
-        }
-        
-        // 绑定取消分类表单事件
-        const cancelCategoryBtn = document.getElementById('cancel-category-btn');
-        if (cancelCategoryBtn) {
-            cancelCategoryBtn.addEventListener('click', () => {
-                this.hideCategoryForm();
-            });
-        }
-        
-        // 绑定分类选择事件
-        const categorySelect = document.getElementById('category-select');
-        if (categorySelect) {
-            categorySelect.addEventListener('change', () => {
-                this.handleCategorySelect();
-            });
-        }
-        
-        // 绑定添加站点按钮事件
-        const addSiteBtn = document.getElementById('add-site-btn');
-        if (addSiteBtn) {
-            addSiteBtn.addEventListener('click', () => {
-                this.showSiteForm('add');
-            });
-        }
-        
-        // 绑定站点表单提交事件
-        const saveSiteBtn = document.getElementById('save-site-btn');
-        if (saveSiteBtn) {
-            saveSiteBtn.addEventListener('click', () => {
-                this.saveSiteForm();
-            });
-        }
-        
-        // 绑定取消站点表单事件
-        const cancelSiteBtn = document.getElementById('cancel-site-btn');
-        if (cancelSiteBtn) {
-            cancelSiteBtn.addEventListener('click', () => {
-                this.hideSiteForm();
-            });
-        }
-        
-        // 绑定保存按钮事件
-        const saveBtn = document.getElementById('save-sites-btn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', () => {
-                this.handleSaveSites();
-            });
-        }
+        // 初始化分类表单
+        this.initCategoryForm();
+        // 初始化站点表单
+        this.initSiteForm();
+        // 初始化JSON编辑器
+        this.initJsonEditor();
+        // 设置保存按钮事件
+        this.initSaveSitesButton();
+        // 设置图标获取功能
+        this.initIconFetcher();
     },
     
     // 处理管理员登录
@@ -1441,6 +1362,183 @@ const App = {
             </div>
         `;
         container.innerHTML = categoryHtml;
+    },
+    
+    // 初始化图标获取器
+    initIconFetcher() {
+        const fetchIconBtn = document.getElementById('fetch-icon-btn');
+        const siteUrlInput = document.getElementById('site-url');
+        const siteIconInput = document.getElementById('site-icon');
+        
+        if (fetchIconBtn && siteUrlInput && siteIconInput) {
+            fetchIconBtn.addEventListener('click', () => {
+                const url = siteUrlInput.value.trim();
+                if (!url) {
+                    this.showToast('请先输入站点URL', 'warning');
+                    return;
+                }
+                
+                // 显示加载状态
+                fetchIconBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+                fetchIconBtn.disabled = true;
+                
+                // 使用抓取服务获取图标
+                this.fetchIconFromUrl(url)
+                    .then(iconUrl => {
+                        if (iconUrl) {
+                            siteIconInput.value = iconUrl;
+                            this.showToast('成功获取图标', 'success');
+                        } else {
+                            this.showToast('无法获取图标，请手动输入', 'warning');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('获取图标时出错:', err);
+                        this.showToast('获取图标失败，请手动输入', 'error');
+                    })
+                    .finally(() => {
+                        // 恢复按钮状态
+                        fetchIconBtn.innerHTML = '<i class="bi bi-download"></i>';
+                        fetchIconBtn.disabled = false;
+                    });
+            });
+        }
+    },
+    
+    // 从URL获取网站图标
+    async fetchIconFromUrl(url) {
+        try {
+            // 提取域名
+            let domain = url;
+            if (!domain.startsWith('http')) {
+                domain = 'https://' + domain;
+            }
+            
+            const urlObj = new URL(domain);
+            const hostname = urlObj.hostname;
+            
+            // 使用图标API服务获取图标
+            const iconApiUrl = `https://gonglue.qinggl.com/app/img/icon.jsp?url=${encodeURIComponent(hostname)}`;
+            
+            // 如果是在浏览器中，可以直接返回API URL
+            return iconApiUrl;
+            
+            // 注意：如果需要先验证图标是否存在，可以使用下面的代码代替
+            /*
+            const response = await fetch(iconApiUrl);
+            if (response.ok) {
+                return iconApiUrl;
+            }
+            
+            // 备用方案：尝试获取网站的favicon
+            return `https://${hostname}/favicon.ico`;
+            */
+        } catch (err) {
+            console.error('解析URL时出错:', err);
+            return null;
+        }
+    },
+    
+    // 初始化分类表单相关事件
+    initCategoryForm() {
+        // 绑定添加分类按钮事件
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        if (addCategoryBtn) {
+            addCategoryBtn.addEventListener('click', () => {
+                this.showCategoryForm('add');
+            });
+        }
+        
+        // 绑定分类表单提交事件
+        const saveCategoryBtn = document.getElementById('save-category-btn');
+        if (saveCategoryBtn) {
+            saveCategoryBtn.addEventListener('click', () => {
+                this.saveCategoryForm();
+            });
+        }
+        
+        // 绑定取消分类表单事件
+        const cancelCategoryBtn = document.getElementById('cancel-category-btn');
+        if (cancelCategoryBtn) {
+            cancelCategoryBtn.addEventListener('click', () => {
+                this.hideCategoryForm();
+            });
+        }
+        
+        // 选项卡切换事件
+        const categoryTab = document.getElementById('category-tab');
+        if (categoryTab) {
+            categoryTab.addEventListener('click', () => {
+                this.hideErrorMessages();
+                this.renderCategoriesList();
+            });
+        }
+    },
+    
+    // 初始化站点表单相关事件
+    initSiteForm() {
+        // 绑定分类选择事件
+        const categorySelect = document.getElementById('category-select');
+        if (categorySelect) {
+            categorySelect.addEventListener('change', () => {
+                this.handleCategorySelect();
+            });
+        }
+        
+        // 绑定添加站点按钮事件
+        const addSiteBtn = document.getElementById('add-site-btn');
+        if (addSiteBtn) {
+            addSiteBtn.addEventListener('click', () => {
+                this.showSiteForm('add');
+            });
+        }
+        
+        // 绑定站点表单提交事件
+        const saveSiteBtn = document.getElementById('save-site-btn');
+        if (saveSiteBtn) {
+            saveSiteBtn.addEventListener('click', () => {
+                this.saveSiteForm();
+            });
+        }
+        
+        // 绑定取消站点表单事件
+        const cancelSiteBtn = document.getElementById('cancel-site-btn');
+        if (cancelSiteBtn) {
+            cancelSiteBtn.addEventListener('click', () => {
+                this.hideSiteForm();
+            });
+        }
+        
+        // 选项卡切换事件
+        const siteTab = document.getElementById('site-tab');
+        if (siteTab) {
+            siteTab.addEventListener('click', () => {
+                this.hideErrorMessages();
+                this.populateCategorySelect();
+            });
+        }
+    },
+    
+    // 初始化JSON编辑器相关事件
+    initJsonEditor() {
+        // 选项卡切换事件
+        const jsonTab = document.getElementById('json-tab');
+        if (jsonTab) {
+            jsonTab.addEventListener('click', () => {
+                this.hideErrorMessages();
+                this.updateJsonEditor();
+            });
+        }
+    },
+    
+    // 初始化保存按钮事件
+    initSaveSitesButton() {
+        const saveBtn = document.getElementById('save-sites-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                this.handleSaveSites();
+            });
+        }
     },
 };
 

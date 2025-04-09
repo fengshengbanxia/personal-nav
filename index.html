@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星辰导航 | Star Navigation</title>
+    <title>夏天导航 | Summer Navigation</title>
     <meta name="description" content="基于Cloudflare Workers和KV存储的个人导航网站">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
@@ -16,12 +16,15 @@
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center py-2">
                     <h1 class="site-title">
-                        <i class="bi bi-rocket"></i> 星辰导航
+                        <i class="bi bi-rocket"></i> 夏天导航
                     </h1>
                     <div class="user-controls">
-                        <button id="theme-toggle" class="theme-toggle">
-                            <i class="bi bi-moon-stars"></i>
-                        </button>
+                        <div class="dropdown" id="theme-dropdown-container">
+                            <button id="theme-toggle" class="theme-toggle dropdown-toggle" type="button">
+                                <i class="bi bi-moon-stars"></i>
+                            </button>
+                            <!-- 主题下拉菜单会在theme.js中动态生成 -->
+                        </div>
                         <div id="admin-container">
                             <a href="#" class="text-decoration-none d-none" id="admin-badge">admin</a>
                             <a href="#" class="text-decoration-none" id="login-btn">
@@ -88,10 +91,10 @@
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center py-2">
                     <div>
-                        <p class="mb-0"> 2025 星辰导航</p>
+                        <p class="mb-0"> 2025 夏天导航</p>
                     </div>
                     <div>
-                        <a href="https://github.com/YOUR_USERNAME/personal-nav" target="_blank" class="text-decoration-none">
+                        <a href="https://github.com/fengshengbanxia/personal-nav" target="_blank" class="text-decoration-none">
                             <i class="bi bi-github"></i>
                         </a>
                     </div>
@@ -226,8 +229,13 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="site-icon" class="form-label">图标URL</label>
-                                            <input type="url" class="form-control" id="site-icon">
-                                            <small class="form-text text-muted">建议使用网站的favicon，例如：https://example.com/favicon.ico</small>
+                                            <div class="input-group">
+                                                <input type="url" class="form-control" id="site-icon">
+                                                <button class="btn btn-outline-primary" type="button" id="fetch-icon-btn" title="自动获取图标">
+                                                    <i class="bi bi-download"></i>
+                                                </button>
+                                            </div>
+                                            <small class="form-text text-muted">点击按钮自动获取网站图标，或手动输入图标URL</small>
                                         </div>
                                         <div class="d-flex justify-content-end">
                                             <button type="button" class="btn btn-outline-secondary me-2" id="cancel-site-btn">取消</button>
