@@ -136,8 +136,47 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-link me-auto" id="init-token-btn">首次使用？初始化令牌</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" id="login-submit">登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 令牌初始化模态框 -->
+    <div class="modal fade" id="initTokenModal" tabindex="-1" aria-labelledby="initTokenModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="initTokenModalLabel">初始化管理员令牌</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning mb-3">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>注意：</strong>此操作仅适用于首次配置。如果已设置令牌，将无法通过此功能重置。
+                    </div>
+                    <form id="init-token-form">
+                        <div class="mb-3">
+                            <label for="new-token" class="form-label">设置管理员令牌</label>
+                            <input type="password" class="form-control" id="new-token" 
+                                   minlength="8" autocomplete="new-password" required>
+                            <div class="form-text">请设置一个至少8个字符的强密码，并妥善保存。</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm-token" class="form-label">确认令牌</label>
+                            <input type="password" class="form-control" id="confirm-token" 
+                                   minlength="8" autocomplete="new-password" required>
+                        </div>
+                        <div class="alert alert-danger d-none" id="init-token-error">
+                            初始化失败
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="init-token-submit">初始化</button>
                 </div>
             </div>
         </div>

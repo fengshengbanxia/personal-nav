@@ -252,21 +252,25 @@ const App = {
             });
         }
         
-        // 登录提交
+        // 登录表单提交
         const loginSubmit = document.getElementById('login-submit');
         if (loginSubmit) {
-            loginSubmit.addEventListener('click', async () => {
-                await this.handleLogin();
+            loginSubmit.addEventListener('click', () => this.handleLogin());
+        }
+        
+        // 初始化令牌按钮
+        const initTokenBtn = document.getElementById('init-token-btn');
+        if (initTokenBtn) {
+            initTokenBtn.addEventListener('click', e => {
+                e.preventDefault();
+                this.openInitTokenModal();
             });
         }
         
-        // 登录表单回车提交
-        const loginForm = document.getElementById('login-form');
-        if (loginForm) {
-            loginForm.addEventListener('submit', async e => {
-                e.preventDefault();
-                await this.handleLogin();
-            });
+        // 初始化令牌表单提交
+        const initTokenSubmit = document.getElementById('init-token-submit');
+        if (initTokenSubmit) {
+            initTokenSubmit.addEventListener('click', () => this.handleInitToken());
         }
         
         // 保存站点按钮
@@ -399,6 +403,91 @@ const App = {
             loginError.textContent = '验证过程中发生错误';
             loginError.classList.remove('d-none');
             console.error('登录失败:', error);
+        }
+    },
+    
+    // 打开初始化令牌模态框
+    openInitTokenModal() {
+        // 隐藏登录模态框
+        const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+        if (loginModal) {
+            loginModal.hide();
+        }
+        
+        // 重置表单
+        const tokenForm = document.getElementById('init-token-form');
+        const errorMsg = document.getElementById('init-token-error');
+        if (tokenForm) tokenForm.reset();
+        if (errorMsg) errorMsg.classList.add('d-none');
+        
+        // 显示初始化模态框
+        const initModal = new bootstrap.Modal(document.getElementById('initTokenModal'));
+        if (initModal) {
+            initModal.show();
+        }
+    },
+    
+    // 处理初始化令牌
+    async handleInitToken() {
+        const newTokenInput = document.getElementById('new-token');
+        const confirmTokenInput = document.getElementById('confirm-token');
+        const errorMsg = document.getElementById('init-token-error');
+        
+        if (!newTokenInput || !confirmTokenInput || !errorMsg) return;
+        
+        const newToken = newTokenInput.value.trim();
+        const confirmToken = confirmTokenInput.value.trim();
+        
+        // 隐藏之前的错误
+        errorMsg.classList.add('d-none');
+        
+        // 验证令牌
+        if (!newToken) {
+            errorMsg.textContent = '请输入令牌';
+            errorMsg.classList.remove('d-none');
+            return;
+        }
+        
+        if (newToken.length < 8) {
+            errorMsg.textContent = '令牌必须至少包含8个字符';
+            errorMsg.classList.remove('d-none');
+            return;
+        }
+        
+        if (newToken !== confirmToken) {
+            errorMsg.textContent = '两次输入的令牌不一致';
+            errorMsg.classList.remove('d-none');
+            return;
+        }
+        
+        try {
+            // 初始化令牌
+            const result = await SitesManager.initializeToken(newToken);
+            
+            if (result.success) {
+                // 初始化成功
+                this.isAdmin = true;
+                
+                // 关闭初始化模态框
+                const initModal = bootstrap.Modal.getInstance(document.getElementById('initTokenModal'));
+                if (initModal) {
+                    initModal.hide();
+                }
+                
+                // 重新渲染以显示管理员选项
+                this.renderSites();
+                
+                // 显示成功提示
+                this.showMessage('管理员令牌初始化成功，您已自动登录', 'success');
+            } else {
+                // 显示错误
+                errorMsg.textContent = result.error || '初始化失败';
+                errorMsg.classList.remove('d-none');
+            }
+        } catch (error) {
+            errorMsg.textContent = '初始化过程中发生错误';
+            errorMsg.classList.remove('d-none');
+            console.error('初始化失败:', error);
         }
     },
     

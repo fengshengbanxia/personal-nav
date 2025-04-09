@@ -142,39 +142,47 @@ const SitesManager = {
     // 验证API令牌
     async verifyToken(token) {
         try {
-            const response = await fetch(`${this.apiBaseUrl}/config`, {
+            // 使用新的专用验证端点
+            const response = await fetch(`${this.apiBaseUrl}/auth/verify`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             
-            // 检查响应状态
+            // 解析响应JSON
+            let data;
+            try {
+                data = await response.json();
+            } catch (parseError) {
+                console.error('解析验证响应失败:', parseError);
+                return { success: false, error: '无法解析服务器响应' };
+            }
+            
+            // 检查响应状态和内容
             if (response.ok) {
-                try {
-                    // 获取响应数据并确保API返回了成功状态
-                    const data = await response.json();
-                    
-                    // 只有当服务器明确表示验证成功时才保存令牌
-                    if (data && !data.error) {
-                        // 保存有效的令牌
-                        this.token = token;
-                        localStorage.setItem('api_token', token);
-                        return { success: true };
-                    } else {
-                        return { 
-                            success: false, 
-                            error: data.error || '验证失败' 
-                        };
-                    }
-                } catch (parseError) {
-                    console.error('解析验证响应失败:', parseError);
-                    return { success: false, error: '无法解析服务器响应' };
+                // 只有当服务器明确报告成功时才保存令牌
+                if (data && data.success === true) {
+                    // 保存有效的令牌
+                    this.token = token;
+                    localStorage.setItem('api_token', token);
+                    return { success: true, message: data.message || '验证成功' };
+                } else {
+                    // 服务器响应OK但返回了错误
+                    console.error('服务器返回了成功状态码但验证失败:', data);
+                    return { 
+                        success: false, 
+                        error: (data && data.error) ? data.error : '验证失败' 
+                    };
                 }
             } else {
+                // 处理非2xx响应码
+                const errorMsg = data && data.error ? data.error : 
+                    response.status === 401 ? '无效的API令牌' : '验证失败';
+                console.error(`验证失败 (${response.status}):`, errorMsg);
                 return { 
                     success: false, 
-                    error: response.status === 401 ? '无效的API令牌' : '验证失败'
+                    error: errorMsg
                 };
             }
         } catch (error) {
@@ -187,6 +195,57 @@ const SitesManager = {
     logout() {
         this.token = '';
         localStorage.removeItem('api_token');
+    },
+    
+    // 初始化管理员令牌 (仅首次使用)
+    async initializeToken(newToken) {
+        // 验证令牌有效性
+        if (!newToken || typeof newToken !== 'string' || newToken.trim().length < 8) {
+            return { 
+                success: false, 
+                error: '无效的令牌：令牌必须是至少8个字符的字符串' 
+            };
+        }
+        
+        try {
+            // 调用初始化端点
+            const response = await fetch(`${this.apiBaseUrl}/auth/init`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: newToken.trim() })
+            });
+            
+            // 解析响应
+            let data;
+            try {
+                data = await response.json();
+            } catch (parseError) {
+                console.error('解析初始化响应失败:', parseError);
+                return { success: false, error: '无法解析服务器响应' };
+            }
+            
+            // 检查结果
+            if (response.ok && data && data.success) {
+                // 初始化成功，保存令牌
+                this.token = newToken.trim();
+                localStorage.setItem('api_token', this.token);
+                return { 
+                    success: true, 
+                    message: data.message || '管理员令牌初始化成功' 
+                };
+            } else {
+                // 服务器返回了错误
+                return { 
+                    success: false, 
+                    error: (data && data.error) ? data.error : '初始化令牌失败' 
+                };
+            }
+        } catch (error) {
+            console.error('初始化令牌失败:', error);
+            return { success: false, error: error.message };
+        }
     }
 };
 
