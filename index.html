@@ -66,16 +66,49 @@
                 <!-- 令牌调试信息 -->
                 <div id="token-debug-panel" class="alert alert-info mb-3 d-none">
                     <div class="d-flex justify-content-between">
-                        <h5><i class="bi bi-key-fill me-2"></i>令牌信息</h5>
+                        <h5><i class="bi bi-key-fill me-2"></i>令牌信息（完整值）</h5>
                         <button id="refresh-token-info" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-arrow-clockwise"></i> 刷新
                         </button>
                     </div>
                     <hr>
                     <div id="token-info-content">
-                        <p><strong>KV存储令牌:</strong> <span id="kv-token-status">加载中...</span></p>
-                        <p><strong>环境变量令牌:</strong> <span id="env-token-status">加载中...</span></p>
+                        <div class="token-section mb-3">
+                            <h6>KV存储令牌 (KV_CONFIG.api_token)</h6>
+                            <div class="token-details">
+                                <p><strong>状态:</strong> <span id="kv-token-status">加载中...</span></p>
+                                <p><strong>值:</strong> <code id="kv-token-value">加载中...</code></p>
+                                <p id="kv-token-error-container" class="d-none text-danger">
+                                    <strong>错误:</strong> <span id="kv-token-error">无</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="token-section mb-3">
+                            <h6>环境变量令牌 (大写 API_TOKEN)</h6>
+                            <div class="token-details">
+                                <p><strong>状态:</strong> <span id="env-token-upper-status">加载中...</span></p>
+                                <p><strong>值:</strong> <code id="env-token-upper-value">加载中...</code></p>
+                                <p id="env-token-upper-error-container" class="d-none text-danger">
+                                    <strong>错误:</strong> <span id="env-token-upper-error">无</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="token-section mb-3">
+                            <h6>环境变量令牌 (小写 api_token)</h6>
+                            <div class="token-details">
+                                <p><strong>状态:</strong> <span id="env-token-lower-status">加载中...</span></p>
+                                <p><strong>值:</strong> <code id="env-token-lower-value">加载中...</code></p>
+                                <p id="env-token-lower-error-container" class="d-none text-danger">
+                                    <strong>错误:</strong> <span id="env-token-lower-error">无</span>
+                                </p>
+                            </div>
+                        </div>
                         <p><strong>当前使用来源:</strong> <span id="active-token-source">加载中...</span></p>
+                        <div id="token-global-error" class="alert alert-danger d-none">
+                            <strong>获取令牌信息时出错:</strong> <span id="token-error-message"></span>
+                        </div>
                     </div>
                 </div>
                 

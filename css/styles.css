@@ -549,16 +549,62 @@ body {
     padding: 0.2rem 0.5rem;
 }
 
+/* 新增：令牌显示相关样式 */
+.token-section {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.token-section h6 {
+    color: #17a2b8;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 5px;
+}
+
+.token-details code {
+    padding: 3px 5px;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.05);
+    word-break: break-all;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
 /* 在暗黑模式下的样式 */
 .dark-theme #token-debug-panel {
     background-color: #2d3748;
     border-left-color: #4fd1c5;
 }
 
-.dark-theme #token-debug-panel h5 {
+.dark-theme #token-debug-panel h5,
+.dark-theme .token-section h6 {
     color: #4fd1c5;
 }
 
 .dark-theme #token-info-content strong {
     color: #e2e8f0;
+}
+
+.dark-theme .token-section {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .token-details code {
+    background-color: rgba(0, 0, 0, 0.3);
 }

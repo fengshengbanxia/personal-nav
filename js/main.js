@@ -1644,41 +1644,137 @@ const App = {
     // 加载令牌调试信息
     async loadTokenDebugInfo() {
         const debugPanel = document.getElementById('token-debug-panel');
-        const kvTokenStatus = document.getElementById('kv-token-status');
-        const envTokenStatus = document.getElementById('env-token-status');
         const activeTokenSource = document.getElementById('active-token-source');
+        const tokenGlobalError = document.getElementById('token-global-error');
+        const tokenErrorMessage = document.getElementById('token-error-message');
         
-        if (!debugPanel || !kvTokenStatus || !envTokenStatus || !activeTokenSource) return;
+        // KV令牌元素
+        const kvTokenStatus = document.getElementById('kv-token-status');
+        const kvTokenValue = document.getElementById('kv-token-value');
+        const kvTokenErrorContainer = document.getElementById('kv-token-error-container');
+        const kvTokenError = document.getElementById('kv-token-error');
+        
+        // 环境变量令牌(大写)元素
+        const envTokenUpperStatus = document.getElementById('env-token-upper-status');
+        const envTokenUpperValue = document.getElementById('env-token-upper-value');
+        const envTokenUpperErrorContainer = document.getElementById('env-token-upper-error-container');
+        const envTokenUpperError = document.getElementById('env-token-upper-error');
+        
+        // 环境变量令牌(小写)元素
+        const envTokenLowerStatus = document.getElementById('env-token-lower-status');
+        const envTokenLowerValue = document.getElementById('env-token-lower-value');
+        const envTokenLowerErrorContainer = document.getElementById('env-token-lower-error-container');
+        const envTokenLowerError = document.getElementById('env-token-lower-error');
+        
+        if (!debugPanel) return;
         
         try {
             // 显示调试面板
             debugPanel.classList.remove('d-none');
             
             // 设置加载中状态
-            kvTokenStatus.textContent = '加载中...';
-            envTokenStatus.textContent = '加载中...';
-            activeTokenSource.textContent = '加载中...';
+            const loadingElements = [
+                kvTokenStatus, kvTokenValue, 
+                envTokenUpperStatus, envTokenUpperValue,
+                envTokenLowerStatus, envTokenLowerValue,
+                activeTokenSource
+            ];
+            
+            loadingElements.forEach(el => {
+                if (el) el.textContent = '加载中...';
+            });
+            
+            // 隐藏错误信息
+            if (tokenGlobalError) tokenGlobalError.classList.add('d-none');
+            if (kvTokenErrorContainer) kvTokenErrorContainer.classList.add('d-none');
+            if (envTokenUpperErrorContainer) envTokenUpperErrorContainer.classList.add('d-none');
+            if (envTokenLowerErrorContainer) envTokenLowerErrorContainer.classList.add('d-none');
             
             // 获取令牌信息
             const result = await SitesManager.getTokenDebugInfo();
             
             if (result.success) {
-                // 更新显示
-                kvTokenStatus.textContent = result.kv_token_status;
-                envTokenStatus.textContent = result.env_token_status;
-                activeTokenSource.textContent = result.active_source;
+                // 更新KV令牌信息
+                if (kvTokenStatus) kvTokenStatus.textContent = result.kv_token_status.status;
+                if (kvTokenValue) {
+                    kvTokenValue.textContent = result.kv_token_status.value || '无值';
+                    kvTokenValue.className = result.kv_token_status.value ? 'text-success' : 'text-muted';
+                }
+                if (result.kv_token_status.error && kvTokenErrorContainer && kvTokenError) {
+                    kvTokenErrorContainer.classList.remove('d-none');
+                    kvTokenError.textContent = result.kv_token_status.error;
+                }
+                
+                // 更新环境变量令牌(大写)信息
+                if (envTokenUpperStatus) envTokenUpperStatus.textContent = result.env_token_upper.status;
+                if (envTokenUpperValue) {
+                    envTokenUpperValue.textContent = result.env_token_upper.value || '无值';
+                    envTokenUpperValue.className = result.env_token_upper.value ? 'text-success' : 'text-muted';
+                }
+                if (result.env_token_upper.error && envTokenUpperErrorContainer && envTokenUpperError) {
+                    envTokenUpperErrorContainer.classList.remove('d-none');
+                    envTokenUpperError.textContent = result.env_token_upper.error;
+                }
+                
+                // 更新环境变量令牌(小写)信息
+                if (envTokenLowerStatus) envTokenLowerStatus.textContent = result.env_token_lower.status;
+                if (envTokenLowerValue) {
+                    envTokenLowerValue.textContent = result.env_token_lower.value || '无值';
+                    envTokenLowerValue.className = result.env_token_lower.value ? 'text-success' : 'text-muted';
+                }
+                if (result.env_token_lower.error && envTokenLowerErrorContainer && envTokenLowerError) {
+                    envTokenLowerErrorContainer.classList.remove('d-none');
+                    envTokenLowerError.textContent = result.env_token_lower.error;
+                }
+                
+                // 更新当前使用的令牌来源
+                if (activeTokenSource) activeTokenSource.textContent = result.active_source;
             } else {
-                // 显示错误
-                kvTokenStatus.textContent = '获取失败';
-                envTokenStatus.textContent = '获取失败';
-                activeTokenSource.textContent = '获取失败';
-                console.error('获取令牌调试信息失败:', result.error);
+                // 显示全局错误
+                if (tokenGlobalError && tokenErrorMessage) {
+                    tokenGlobalError.classList.remove('d-none');
+                    tokenErrorMessage.textContent = result.error || '未知错误';
+                }
+                
+                // 设置所有字段为获取失败
+                const failElements = [
+                    kvTokenStatus, kvTokenValue, 
+                    envTokenUpperStatus, envTokenUpperValue,
+                    envTokenLowerStatus, envTokenLowerValue,
+                    activeTokenSource
+                ];
+                
+                failElements.forEach(el => {
+                    if (el) el.textContent = '获取失败';
+                    if (el && el.id.includes('value')) {
+                        el.className = 'text-danger';
+                    }
+                });
+                
+                console.error('获取令牌调试信息失败:', result.error, result.stack);
             }
         } catch (error) {
-            // 处理异常
-            kvTokenStatus.textContent = '获取失败';
-            envTokenStatus.textContent = '获取失败';
-            activeTokenSource.textContent = '获取失败';
+            // 显示异常错误
+            if (tokenGlobalError && tokenErrorMessage) {
+                tokenGlobalError.classList.remove('d-none');
+                tokenErrorMessage.textContent = error.message || '未知错误';
+            }
+            
+            // 设置所有字段为获取失败
+            const errorElements = [
+                kvTokenStatus, kvTokenValue, 
+                envTokenUpperStatus, envTokenUpperValue,
+                envTokenLowerStatus, envTokenLowerValue,
+                activeTokenSource
+            ];
+            
+            errorElements.forEach(el => {
+                if (el) el.textContent = '获取失败';
+                if (el && el.id.includes('value')) {
+                    el.className = 'text-danger';
+                }
+            });
+            
             console.error('获取令牌调试信息过程中发生错误:', error);
         }
     },
