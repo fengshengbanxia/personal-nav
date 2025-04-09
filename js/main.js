@@ -52,7 +52,7 @@ const App = {
     // 初始化应用
     async init() {
         // 检查是否已经登录
-        this.checkAdminStatus();
+        await this.checkAdminStatus();
         
         // 加载站点数据
         await this.loadSites();
@@ -1059,9 +1059,28 @@ const App = {
     },
     
     // 检查管理员状态
-    checkAdminStatus() {
+    async checkAdminStatus() {
         const token = localStorage.getItem('api_token');
-        this.isAdmin = !!token;
+        
+        if (!token) {
+            this.isAdmin = false;
+            return;
+        }
+        
+        try {
+            // 实际验证令牌的有效性
+            const result = await SitesManager.verifyToken(token);
+            this.isAdmin = result.success;
+            
+            // 如果令牌无效，清除它
+            if (!result.success) {
+                SitesManager.logout();
+            }
+        } catch (error) {
+            console.error('验证管理员状态时出错:', error);
+            this.isAdmin = false;
+            SitesManager.logout();
+        }
     },
     
     // 显示错误信息

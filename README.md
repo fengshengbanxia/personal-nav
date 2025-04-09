@@ -52,7 +52,22 @@ personal-nav/
      - 变量名: `KV_SITES`, 命名空间: 选择刚创建的 `KV_SITES`
      - 变量名: `KV_CONFIG`, 命名空间: 选择刚创建的 `KV_CONFIG`
 
-3. 在 `KV_CONFIG` 命名空间添加一个管理员令牌：
+3. 初始化API令牌
+  - 部署Worker后，访问以下URL来设置您的API令牌（请替换为您自己的Worker域名和所需的令牌）：
+  - https://[您的Worker域名]/api/init-token?token=YOUR_SECURE_TOKEN
+
+  - 使用令牌登录
+现在，当您访问网站并点击"管理员入口"时，输入您刚刚设置的令牌。如果一切正常，您应该能够成功登录并管理您的站点数据。
+
+4. 移除临时端点（重要！）
+一旦您成功设置了API令牌并确认可以登录，请从Worker代码中删除临时的init-token端点以确保安全。这个端点只应使用一次。
+
+安全注意事项
+为您的API令牌选择一个强密码（复杂且难以猜测）
+设置令牌后，请记得从代码中删除临时端点
+如果您需要更改令牌，可以通过Cloudflare Dashboard的KV存储界面手动更新
+
+5. 在 `KV_CONFIG` 命名空间添加一个管理员令牌：
    - 键名: `api_token`
    - 值: 您的自定义 API 令牌 (保持机密性和复杂性)
 
@@ -62,14 +77,6 @@ personal-nav/
 2. 在 "Routes" 部分添加一个新路由：
    - 路由: `/api/*`
    - Worker: 选择您刚创建的 Worker
-
-## 本地开发
-
-项目支持本地开发模式，无需实际 Worker API：
-
-1. 使用任何本地 HTTP 服务器启动项目 (例如 VS Code Live Server)
-2. 在本地模式下，系统将使用模拟数据而不是真实 API 调用
-3. 本地 API 令牌验证始终成功，方便测试管理员功能
 
 ## 自定义数据格式
 
@@ -92,7 +99,30 @@ personal-nav/
   }
 ]
 ```
-
+从Worker代码中删除临时的init-token端点以确保安全，第63行
+```
+ // 临时端点：初始化API令牌 - 部署后用一次，然后移除此代码
+    else if (apiPath === 'init-token') {
+      const url = new URL(request.url);
+      const tokenParam = url.searchParams.get('token');
+      
+      if (!tokenParam) {
+        return jsonResponse({ error: '未提供令牌' }, corsHeaders, 400);
+      }
+      
+      try {
+        // 设置API令牌
+        await KV_CONFIG.put('api_token', tokenParam);
+        return jsonResponse({ 
+          success: true, 
+          message: 'API令牌已成功初始化，请保存这个令牌用于后续管理操作',
+          token: tokenParam
+        }, corsHeaders);
+      } catch (e) {
+        return jsonResponse({ error: '设置API令牌失败' }, corsHeaders, 500);
+      }
+    }
+```
 ## 许可证
 
 MIT
