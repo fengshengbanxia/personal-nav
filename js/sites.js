@@ -117,12 +117,6 @@ const SitesManager = {
             throw new Error('需要API令牌');
         }
         
-        if (this.useMockData) {
-            // 本地开发模式，模拟成功
-            console.log('本地开发模式：模拟更新站点数据', sitesData);
-            return { success: true };
-        }
-        
         try {
             const response = await fetch(`${this.apiBaseUrl}/sites`, {
                 method: 'POST',
@@ -147,14 +141,6 @@ const SitesManager = {
     
     // 验证API令牌
     async verifyToken(token) {
-        if (this.useMockData) {
-            // 本地开发模式，模拟验证成功
-            console.log('本地开发模式：模拟令牌验证成功');
-            this.token = token;
-            localStorage.setItem('api_token', token);
-            return { success: true };
-        }
-        
         try {
             const response = await fetch(`${this.apiBaseUrl}/config`, {
                 method: 'GET',
