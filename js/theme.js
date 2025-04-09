@@ -1,6 +1,6 @@
 /**
  * 主题切换功能
- * 支持多种主题颜色切换，并在本地保存主题偏好
+ * 支持深色/浅色主题切换和自定义背景，并在本地保存主题偏好
  */
 
 // 主题设置
@@ -9,8 +9,6 @@ const ThemeManager = {
     themes: {
         light: { name: '浅色', icon: 'bi-sun', type: 'light' },
         dark: { name: '深色', icon: 'bi-moon-stars', type: 'dark' },
-        purple: { name: '紫色', icon: 'bi-palette', type: 'dark' },
-        red: { name: '红色', icon: 'bi-palette-fill', type: 'dark' },
         custom: { name: '自定义背景', icon: 'bi-image', type: 'custom' }
     },
     
@@ -40,20 +38,11 @@ const ThemeManager = {
     // 设置主题
     setTheme(theme) {
         // 移除所有主题类
-        document.body.classList.remove('dark-theme', 'purple-theme', 'red-theme', 'custom-theme');
-        
-        // 获取主题信息
-        const themeInfo = this.themes[theme] || this.themes.light;
+        document.body.classList.remove('dark-theme', 'custom-theme');
         
         // 应用主题类
         if (theme === 'dark') {
             document.body.classList.add('dark-theme');
-        } else if (theme === 'purple') {
-            document.body.classList.add('dark-theme'); // 基础深色
-            document.body.classList.add('purple-theme');
-        } else if (theme === 'red') {
-            document.body.classList.add('dark-theme'); // 基础深色
-            document.body.classList.add('red-theme');
         } else if (theme === 'custom') {
             document.body.classList.add('custom-theme');
             // 应用自定义背景
@@ -73,16 +62,13 @@ const ThemeManager = {
         this.updateThemeSelector(theme);
     },
     
-    // 切换到下一个主题
+    // 切换主题（仅在浅色/深色之间切换）
     toggleTheme() {
         const currentTheme = this.getCurrentTheme();
-        const themeKeys = Object.keys(this.themes);
-        const currentIndex = themeKeys.indexOf(currentTheme);
-        const nextIndex = (currentIndex + 1) % themeKeys.length;
-        const nextTheme = themeKeys[nextIndex];
-        
-        this.setTheme(nextTheme);
-        return nextTheme;
+        // 只在浅色和深色之间切换
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        this.setTheme(newTheme);
+        return newTheme;
     },
     
     // 更新主题选择器
@@ -157,26 +143,28 @@ const ThemeManager = {
             dropdown.appendChild(item);
         });
         
-        // 添加自定义背景设置选项
-        const divider = document.createElement('div');
-        divider.className = 'dropdown-divider';
-        dropdown.appendChild(divider);
-        
-        const customBgOption = document.createElement('a');
-        customBgOption.className = 'dropdown-item';
-        customBgOption.href = '#';
-        customBgOption.innerHTML = '<i class="bi bi-gear me-2"></i>设置背景图片';
-        customBgOption.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.openCustomBackgroundDialog();
+        // 添加自定义背景设置选项（仅当选择了自定义主题时）
+        if (currentTheme === 'custom') {
+            const divider = document.createElement('div');
+            divider.className = 'dropdown-divider';
+            dropdown.appendChild(divider);
             
-            // 关闭下拉菜单
-            const dropdownToggle = document.getElementById('theme-toggle');
-            if (dropdownToggle) {
-                bootstrap.Dropdown.getInstance(dropdownToggle)?.hide();
-            }
-        });
-        dropdown.appendChild(customBgOption);
+            const customBgOption = document.createElement('a');
+            customBgOption.className = 'dropdown-item';
+            customBgOption.href = '#';
+            customBgOption.innerHTML = '<i class="bi bi-gear me-2"></i>设置背景图片';
+            customBgOption.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.openCustomBackgroundDialog();
+                
+                // 关闭下拉菜单
+                const dropdownToggle = document.getElementById('theme-toggle');
+                if (dropdownToggle) {
+                    bootstrap.Dropdown.getInstance(dropdownToggle)?.hide();
+                }
+            });
+            dropdown.appendChild(customBgOption);
+        }
         
         // 添加到容器
         container.appendChild(dropdown);
@@ -205,6 +193,11 @@ const ThemeManager = {
             // 为主题按钮添加下拉菜单属性
             themeToggle.setAttribute('data-bs-toggle', 'dropdown');
             themeToggle.setAttribute('aria-expanded', 'false');
+            
+            // 添加单击事件监听器，直接在浅色和深色之间切换
+            themeToggle.addEventListener('click', (e) => {
+                // 如果有下拉菜单，点击就会显示，不需要额外处理
+            });
         }
         
         // 监听系统主题变化

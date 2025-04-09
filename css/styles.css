@@ -32,35 +32,6 @@
     --dark-text-secondary: #9aa0a6;
     --dark-shadow: rgba(0, 0, 0, 0.3);
     
-    /* 紫色主题变量 */
-    --purple-primary: #9a73ff;
-    --purple-primary-dark: #7b4dff;
-    --purple-primary-light: #b38fff;
-    --purple-secondary: #ff4dbd;
-    --purple-secondary-dark: #d93a9c;
-    --purple-accent: #43e8d8;
-    --purple-bg: #15151f;
-    --purple-surface: #212130;
-    --purple-card: #2a2a3c;
-    --purple-border: #343450;
-    --purple-text: #f8f8ff;
-    --purple-text-secondary: #c5c5d3;
-    --purple-shadow: rgba(0, 0, 0, 0.3);
-    
-    /* 红色主题变量 */
-    --red-primary: #ff4d4d;
-    --red-primary-dark: #cc3333;
-    --red-primary-light: #ff7373;
-    --red-secondary: #4d79ff;
-    --red-accent: #43e8d8;
-    --red-bg: #1f1515;
-    --red-surface: #302121;
-    --red-card: #3c2a2a;
-    --red-border: #503434;
-    --red-text: #fff8f8;
-    --red-text-secondary: #d3c5c5;
-    --red-shadow: rgba(0, 0, 0, 0.3);
-    
     /* 当前活动主题 - 默认浅色 */
     --primary: var(--light-primary);
     --primary-dark: var(--light-primary-dark);
@@ -612,4 +583,95 @@ body {
     .site-title {
         font-size: 1.1rem;
     }
+}
+
+/* 主题相关样式 */
+body {
+    --bg-color: #f8f9fa;
+    --text-color: #212529;
+    --card-bg: #fff;
+    --card-border: #dee2e6;
+    --card-shadow: rgba(0, 0, 0, 0.05);
+    --modal-bg: #fff;
+    --input-bg: #fff;
+    --input-border: #ced4da;
+    --btn-primary-bg: #0d6efd;
+    --btn-primary-text: #fff;
+    --btn-outline-primary-bg: transparent;
+    --btn-outline-primary-text: #0d6efd;
+    --btn-outline-primary-border: #0d6efd;
+    --nav-bg: #f8f9fa;
+    --nav-text: #212529;
+    --dropdown-bg: #fff;
+    --dropdown-text: #212529;
+    --nav-hover: #e9ecef;
+    --footer-bg: #f8f9fa;
+    --footer-text: #6c757d;
+    --header-bg: rgba(248, 249, 250, 0.9);
+    --search-box-bg: rgba(255, 255, 255, 0.8);
+    --modal-overlay: rgba(0, 0, 0, 0.5);
+    --clock-bg: rgba(255, 255, 255, 0.7);
+    --clock-text: #212529;
+    --custom-background: none;
+}
+
+body.dark-theme {
+    --bg-color: #222;
+    --text-color: #f8f9fa;
+    --card-bg: #333;
+    --card-border: #444;
+    --card-shadow: rgba(0, 0, 0, 0.2);
+    --modal-bg: #333;
+    --input-bg: #444;
+    --input-border: #555;
+    --nav-bg: #333;
+    --nav-text: #f8f9fa;
+    --dropdown-bg: #444;
+    --dropdown-text: #f8f9fa;
+    --nav-hover: #555;
+    --footer-bg: #333;
+    --footer-text: #adb5bd;
+    --header-bg: rgba(51, 51, 51, 0.9);
+    --search-box-bg: rgba(68, 68, 68, 0.8);
+    --clock-bg: rgba(51, 51, 51, 0.7);
+    --clock-text: #f8f9fa;
+}
+
+body.custom-theme {
+    background-image: var(--custom-background);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-border: rgba(255, 255, 255, 0.3);
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    --modal-bg: rgba(255, 255, 255, 0.85);
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --input-border: rgba(206, 212, 218, 0.8);
+    --nav-bg: rgba(248, 249, 250, 0.8);
+    --dropdown-bg: rgba(255, 255, 255, 0.9);
+    --footer-bg: rgba(248, 249, 250, 0.8);
+    --header-bg: rgba(248, 249, 250, 0.8);
+    --search-box-bg: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-theme.custom-theme {
+    --card-bg: rgba(51, 51, 51, 0.7);
+    --card-border: rgba(68, 68, 68, 0.3);
+    --modal-bg: rgba(51, 51, 51, 0.85);
+    --input-bg: rgba(68, 68, 68, 0.8);
+    --input-border: rgba(85, 85, 85, 0.8);
+    --nav-bg: rgba(51, 51, 51, 0.8);
+    --dropdown-bg: rgba(68, 68, 68, 0.9);
+    --footer-bg: rgba(51, 51, 51, 0.8);
+    --header-bg: rgba(51, 51, 51, 0.8);
+    --search-box-bg: rgba(68, 68, 68, 0.8);
+}
+
+body.custom-background {
+    background-image: var(--custom-background);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
