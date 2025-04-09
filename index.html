@@ -22,10 +22,13 @@
                         <button id="theme-toggle" class="theme-toggle">
                             <i class="bi bi-sun"></i> <!-- Default to sun icon -->
                         </button>
+                        <a href="/" class="btn btn-sm btn-outline-secondary me-2">
+                            <i class="bi bi-house"></i> <span>首页</span>
+                        </a>
                         <div id="admin-container">
                             <a href="#" class="text-decoration-none d-none" id="admin-badge">admin</a>
-                            <a href="#" class="text-decoration-none" id="login-btn">
-                                <i class="bi bi-box-arrow-in-right"></i>
+                            <a href="#" class="btn btn-sm btn-outline-primary" id="login-btn">
+                                <i class="bi bi-shield-lock"></i> <span>管理登录</span>
                             </a>
                         </div>
                     </div>
@@ -35,12 +38,6 @@
         
         <main class="app-content">
             <div class="container py-3">
-                <!-- 搜索框 -->
-                <div class="search-container">
-                    <input type="text" id="search-input" class="form-control" placeholder="探索星辰大海...">
-                    <i class="bi bi-search search-icon"></i>
-                </div>
-
                 <!-- 状态组件 -->
                 <div class="status-widgets">
                     <!-- 每日一言 -->
@@ -64,6 +61,12 @@
                         <div class="mb-1"><i class="bi bi-clock"></i></div>
                         <div id="time-display" class="time-display"></div>
                     </div>
+                </div>
+                
+                <!-- 搜索框 -->
+                <div class="search-container">
+                    <input type="text" id="search-input" class="form-control" placeholder="探索星辰大海...">
+                    <i class="bi bi-search search-icon"></i>
                 </div>
 
                 <!-- 分类导航 -->

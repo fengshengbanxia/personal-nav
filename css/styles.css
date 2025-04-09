@@ -78,7 +78,7 @@ body {
 .user-controls {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .theme-toggle {
@@ -288,10 +288,14 @@ body {
 
 /* 状态组件 */
 .status-widgets {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 1.5rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .widget {
@@ -301,6 +305,9 @@ body {
     box-shadow: var(--shadow);
     transition: var(--transition);
     border: 1px solid var(--border);
+    flex: 1;
+    min-width: 250px;
+    max-width: 350px;
 }
 
 .dark-theme .widget {
@@ -474,7 +481,8 @@ body {
 /* 响应式调整 */
 @media (max-width: 768px) {
     .status-widgets {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: center;
     }
     
     .site-title {
@@ -483,11 +491,34 @@ body {
     
     .widget {
         min-width: 100%;
+        max-width: 100%;
+    }
+    
+    .user-controls {
+        gap: 0.3rem;
+    }
+    
+    .user-controls .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
     }
 }
 
 @media (max-width: 576px) {
     .site-title {
         font-size: 1.1rem;
+    }
+    
+    .user-controls .btn-sm {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .user-controls .btn-sm i {
+        margin-right: 0;
+    }
+    
+    .user-controls .btn-sm span {
+        display: none;
     }
 }
