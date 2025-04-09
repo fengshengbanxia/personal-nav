@@ -131,6 +131,12 @@ async function isAuthenticated(request) {
       return false;
     }
     
+    // 进一步检查，确保存储的令牌是有效的非空字符串
+    if (typeof storedToken !== 'string' || storedToken.length === 0) {
+      console.error('存储的API令牌无效 (不是非空字符串)');
+      return false;
+    }
+    
     // 安全的时间常数比较，避免时序攻击
     const tokenMatches = token.length === storedToken.length && 
                          token === storedToken;
