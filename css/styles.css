@@ -18,18 +18,18 @@
     --light-text-secondary: #5f6368;
     --light-shadow: rgba(0, 0, 0, 0.1);
     
-    /* 深色主题变量 */
+    /* 深色主题变量 - 优化后 */
     --dark-primary: #8ab4f8;
     --dark-primary-dark: #669df6;
     --dark-primary-light: #aecbfa;
     --dark-secondary: #81c995;
     --dark-accent: #f28b82;
-    --dark-bg: #202124;
-    --dark-surface: #292a2d;
-    --dark-card: #35363a;
-    --dark-border: #3c4043;
-    --dark-text: #e8eaed;
-    --dark-text-secondary: #9aa0a6;
+    --dark-bg: #1a1a1a;
+    --dark-surface: #2d2d2d;
+    --dark-card: #383838;
+    --dark-border: #444444;
+    --dark-text: #ffffff;
+    --dark-text-secondary: #b0b0b0;
     --dark-shadow: rgba(0, 0, 0, 0.3);
     
     /* 当前活动主题 - 默认浅色 */
@@ -100,11 +100,12 @@
 .dark-theme.custom-theme .widget,
 .dark-theme.custom-theme .nav-category-item,
 .dark-theme.custom-theme .site-card {
-    background-color: rgba(20, 20, 30, 0.7);
+    background-color: rgba(40, 40, 40, 0.8);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(80, 80, 80, 0.2);
     color: var(--dark-text);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -137,7 +138,7 @@ body {
 
 .dark-theme .app-header {
     background-color: var(--dark-surface);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .site-title {
@@ -150,7 +151,7 @@ body {
 }
 
 .dark-theme .site-title {
-    color: var(--primary-light);
+    color: #ffffff;
 }
 
 /* 用户控制 */
@@ -184,7 +185,7 @@ body {
 }
 
 .dark-theme .theme-toggle:hover {
-    background-color: var(--dark-card);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* 搜索框 */
@@ -205,7 +206,8 @@ body {
 .dark-theme .search-container input {
     background-color: var(--dark-surface);
     border-color: var(--dark-border);
-    color: var(--text-light);
+    color: var(--dark-text);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .search-container input:focus {
@@ -223,7 +225,7 @@ body {
 }
 
 .dark-theme .search-icon {
-    color: var(--text-light-secondary);
+    color: var(--dark-text-secondary);
 }
 
 /* 主内容区 */
@@ -267,6 +269,7 @@ body {
 .dark-theme .site-card {
     background-color: var(--dark-surface);
     border-color: var(--dark-border);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .site-card:hover {
@@ -275,7 +278,9 @@ body {
 }
 
 .dark-theme .site-card:hover {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transform: translateY(-5px);
+    border-color: var(--dark-primary-light);
 }
 
 .site-header {
@@ -302,7 +307,7 @@ body {
 }
 
 .dark-theme .site-name {
-    color: var(--text-light);
+    color: var(--dark-text);
 }
 
 .site-description {
@@ -313,7 +318,7 @@ body {
 }
 
 .dark-theme .site-description {
-    color: var(--text-light-secondary);
+    color: var(--dark-text-secondary);
 }
 
 .site-link {
@@ -356,6 +361,7 @@ body {
 .dark-theme .nav-category-item {
     background-color: var(--dark-surface);
     border-color: var(--dark-border);
+    color: var(--dark-text);
 }
 
 .nav-category-item:hover {
@@ -364,10 +370,22 @@ body {
     border-color: var(--primary-light);
 }
 
+.dark-theme .nav-category-item:hover {
+    background-color: var(--dark-primary-light);
+    color: #121212;
+    border-color: var(--dark-primary-light);
+}
+
 .nav-category-item.active {
     background-color: var(--primary);
     color: white;
     border-color: var(--primary);
+}
+
+.dark-theme .nav-category-item.active {
+    background-color: var(--dark-primary);
+    color: #121212;
+    border-color: var(--dark-primary);
 }
 
 /* 底部样式 */
@@ -380,7 +398,7 @@ body {
 
 .dark-theme .app-footer {
     background-color: var(--dark-surface);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* 状态组件 */
@@ -401,7 +419,8 @@ body {
 
 .dark-theme .widget {
     background-color: var(--dark-surface);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--dark-border);
 }
 
 .widget-quote {
@@ -631,25 +650,25 @@ body {
 }
 
 body.dark-theme {
-    --bg-color: #222;
-    --text-color: #f8f9fa;
-    --card-bg: #333;
-    --card-border: #444;
-    --card-shadow: rgba(0, 0, 0, 0.2);
-    --modal-bg: #333;
-    --input-bg: #444;
-    --input-border: #555;
-    --nav-bg: #333;
-    --nav-text: #f8f9fa;
-    --dropdown-bg: #444;
-    --dropdown-text: #f8f9fa;
-    --nav-hover: #555;
-    --footer-bg: #333;
-    --footer-text: #adb5bd;
-    --header-bg: rgba(51, 51, 51, 0.9);
-    --search-box-bg: rgba(68, 68, 68, 0.8);
-    --clock-bg: rgba(51, 51, 51, 0.7);
-    --clock-text: #f8f9fa;
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --card-bg: #2d2d2d;
+    --card-border: #444444;
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    --modal-bg: #2d2d2d;
+    --input-bg: #383838;
+    --input-border: #555555;
+    --nav-bg: #2d2d2d;
+    --nav-text: #ffffff;
+    --dropdown-bg: #383838;
+    --dropdown-text: #ffffff;
+    --nav-hover: #444444;
+    --footer-bg: #2d2d2d;
+    --footer-text: #b0b0b0;
+    --header-bg: rgba(45, 45, 45, 0.95);
+    --search-box-bg: rgba(56, 56, 56, 0.9);
+    --clock-bg: rgba(45, 45, 45, 0.8);
+    --clock-text: #ffffff;
 }
 
 body.custom-theme {
@@ -672,14 +691,31 @@ body.custom-theme {
 }
 
 body.dark-theme.custom-theme {
-    --card-bg: rgba(51, 51, 51, 0.7);
-    --card-border: rgba(68, 68, 68, 0.3);
-    --modal-bg: rgba(51, 51, 51, 0.85);
-    --input-bg: rgba(68, 68, 68, 0.8);
-    --input-border: rgba(85, 85, 85, 0.8);
-    --nav-bg: rgba(51, 51, 51, 0.8);
-    --dropdown-bg: rgba(68, 68, 68, 0.9);
-    --footer-bg: rgba(51, 51, 51, 0.8);
-    --header-bg: rgba(51, 51, 51, 0.8);
-    --search-box-bg: rgba(68, 68, 68, 0.8);
+    --card-bg: rgba(40, 40, 40, 0.85);
+    --card-border: rgba(70, 70, 70, 0.5);
+    --modal-bg: rgba(40, 40, 40, 0.9);
+    --input-bg: rgba(55, 55, 55, 0.85);
+    --input-border: rgba(90, 90, 90, 0.8);
+    --nav-bg: rgba(40, 40, 40, 0.85);
+    --dropdown-bg: rgba(55, 55, 55, 0.9);
+    --footer-bg: rgba(40, 40, 40, 0.9);
+    --header-bg: rgba(40, 40, 40, 0.95);
+    --search-box-bg: rgba(55, 55, 55, 0.85);
+}
+
+.dark-theme.custom-theme .site-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border-color: var(--dark-primary-light);
+}
+
+.dark-theme.custom-background::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    z-index: -1;
 }
