@@ -175,9 +175,14 @@
                 </div>
                 <div class="modal-body">
                     <form id="login-form">
+                        <!-- 隐藏的用户名字段，用于提高可访问性 -->
+                        <div class="visually-hidden">
+                            <label for="username">用户名</label>
+                            <input type="text" id="username" name="username" autocomplete="username">
+                        </div>
                         <div class="mb-3">
                             <label for="api-key" class="form-label">API 密钥</label>
-                            <input type="password" class="form-control" id="api-key" autocomplete="new-password" required>
+                            <input type="password" class="form-control" id="api-key" name="password" autocomplete="current-password" required>
                         </div>
                         <div class="alert alert-danger d-none" id="login-error">
                             登录失败，请检查您的 API 密钥
@@ -207,16 +212,21 @@
                         <strong>注意：</strong>此操作仅适用于首次配置。如果已设置令牌，将无法通过此功能重置。
                     </div>
                     <form id="init-token-form">
+                        <!-- 隐藏的用户名字段，用于提高可访问性 -->
+                        <div class="visually-hidden">
+                            <label for="init-username">用户名</label>
+                            <input type="text" id="init-username" name="username" autocomplete="username">
+                        </div>
                         <div class="mb-3">
                             <label for="new-token" class="form-label">设置管理员令牌</label>
                             <input type="password" class="form-control" id="new-token" 
-                                   minlength="8" autocomplete="new-password" required>
+                                   minlength="8" name="password" autocomplete="new-password" required>
                             <div class="form-text">请设置一个至少8个字符的强密码，并妥善保存。</div>
                         </div>
                         <div class="mb-3">
                             <label for="confirm-token" class="form-label">确认令牌</label>
                             <input type="password" class="form-control" id="confirm-token" 
-                                   minlength="8" autocomplete="new-password" required>
+                                   minlength="8" name="confirm-password" autocomplete="new-password" required>
                         </div>
                         <div class="alert alert-danger d-none" id="init-token-error">
                             初始化失败

@@ -1690,6 +1690,11 @@ const App = {
             if (envTokenUpperErrorContainer) envTokenUpperErrorContainer.classList.add('d-none');
             if (envTokenLowerErrorContainer) envTokenLowerErrorContainer.classList.add('d-none');
             
+            // 检查函数是否存在
+            if (typeof SitesManager.getTokenDebugInfo !== 'function') {
+                throw new Error('获取令牌信息函数未定义，请检查sites.js是否正确加载');
+            }
+            
             // 获取令牌信息
             const result = await SitesManager.getTokenDebugInfo();
             
@@ -1751,13 +1756,14 @@ const App = {
                     }
                 });
                 
-                console.error('获取令牌调试信息失败:', result.error, result.stack);
+                console.error('获取令牌调试信息失败:', result.error, result.stack || '无堆栈信息');
             }
         } catch (error) {
             // 显示异常错误
             if (tokenGlobalError && tokenErrorMessage) {
                 tokenGlobalError.classList.remove('d-none');
                 tokenErrorMessage.textContent = error.message || '未知错误';
+                console.error('获取令牌信息时出错:', error);
             }
             
             // 设置所有字段为获取失败

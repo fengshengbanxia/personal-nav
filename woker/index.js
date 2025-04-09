@@ -70,6 +70,13 @@ async function handleApiRequest(request, path, corsHeaders) {
         }, corsHeaders, 500);
       }
     }
+    // 默认返回404，而不是400
+    else {
+      return jsonResponse({ 
+        success: false, 
+        error: '找不到请求的API端点'
+      }, corsHeaders, 404);
+    }
   } 
   // 需要认证的POST请求
   else if (request.method === 'POST') {
@@ -112,7 +119,13 @@ async function handleApiRequest(request, path, corsHeaders) {
     }
   }
   
-  return jsonResponse({ error: '无效的API请求' }, corsHeaders, 400);
+  // 默认处理所有不匹配的请求
+  return jsonResponse({ 
+    success: false,
+    error: '无效的API请求方法或路径',
+    path: apiPath,
+    method: request.method
+  }, corsHeaders, 404);
 }
 
 // 处理令牌验证请求
@@ -279,6 +292,7 @@ async function getTokenDebugInfo(corsHeaders) {
     
     // 尝试从环境变量获取令牌（大写）
     try {
+      console.log("检查环境变量 API_TOKEN");
       if (typeof API_TOKEN !== 'undefined') {
         // 直接返回令牌值
         envTokenUpper = {
@@ -286,12 +300,14 @@ async function getTokenDebugInfo(corsHeaders) {
           value: API_TOKEN,
           error: null
         };
+        console.log("环境变量 API_TOKEN 已设置");
       } else {
         envTokenUpper = {
           status: '未定义',
           value: null,
           error: 'API_TOKEN环境变量不存在'
         };
+        console.log("环境变量 API_TOKEN 未设置");
       }
     } catch (e) {
       envTokenUpper = {
@@ -299,10 +315,12 @@ async function getTokenDebugInfo(corsHeaders) {
         value: null,
         error: e.message
       };
+      console.log("读取环境变量 API_TOKEN 出错:", e);
     }
     
     // 尝试从环境变量获取令牌（小写）
     try {
+      console.log("检查环境变量 api_token");
       if (typeof api_token !== 'undefined') {
         // 直接返回令牌值
         envTokenLower = {
@@ -310,12 +328,14 @@ async function getTokenDebugInfo(corsHeaders) {
           value: api_token,
           error: null
         };
+        console.log("环境变量 api_token 已设置");
       } else {
         envTokenLower = {
           status: '未定义',
           value: null,
           error: 'api_token环境变量不存在'
         };
+        console.log("环境变量 api_token 未设置");
       }
     } catch (e) {
       envTokenLower = {
@@ -323,6 +343,7 @@ async function getTokenDebugInfo(corsHeaders) {
         value: null,
         error: e.message
       };
+      console.log("读取环境变量 api_token 出错:", e);
     }
     
     // 确定当前使用的令牌来源
@@ -336,6 +357,7 @@ async function getTokenDebugInfo(corsHeaders) {
     }
     
     // 返回信息
+    console.log("返回令牌调试信息");
     return jsonResponse({
       success: true,
       kv_token_status: kvToken,
