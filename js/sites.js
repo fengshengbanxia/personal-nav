@@ -163,11 +163,28 @@ const SitesManager = {
                 }
             });
             
+            // 检查响应状态
             if (response.ok) {
-                // 保存有效的令牌
-                this.token = token;
-                localStorage.setItem('api_token', token);
-                return { success: true };
+                try {
+                    // 获取响应数据并确保API返回了成功状态
+                    const data = await response.json();
+                    
+                    // 只有当服务器明确表示验证成功时才保存令牌
+                    if (data && !data.error) {
+                        // 保存有效的令牌
+                        this.token = token;
+                        localStorage.setItem('api_token', token);
+                        return { success: true };
+                    } else {
+                        return { 
+                            success: false, 
+                            error: data.error || '验证失败' 
+                        };
+                    }
+                } catch (parseError) {
+                    console.error('解析验证响应失败:', parseError);
+                    return { success: false, error: '无法解析服务器响应' };
+                }
             } else {
                 return { 
                     success: false, 

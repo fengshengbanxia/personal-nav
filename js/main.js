@@ -1314,19 +1314,17 @@ const App = {
         const navContainer = document.getElementById('nav-categories');
         if (!navContainer || !this.sitesData || this.sitesData.length === 0) return;
         
-        // 清空导航
-        navContainer.innerHTML = '';
+        // 获取已有的分类ID，避免重复添加
+        const existingCategoryIds = Array.from(navContainer.querySelectorAll('.nav-category-item'))
+            .map(item => item.dataset.categoryId);
         
-        // 添加"全部"导航项
-        const allItem = document.createElement('div');
-        allItem.className = 'nav-category-item active';
-        allItem.dataset.categoryId = 'all';
-        allItem.innerHTML = '<i class="bi bi-heart-fill"></i> 全部';
-        allItem.addEventListener('click', () => this.filterByCategory('all'));
-        navContainer.appendChild(allItem);
-        
-        // 添加每个分类的导航项
+        // 保留"全部"导航项和基本分类，只添加尚未在HTML中定义的分类
         this.sitesData.forEach(category => {
+            // 如果此分类ID已存在于HTML中，则跳过
+            if (existingCategoryIds.includes(category.id)) {
+                return;
+            }
+            
             const navItem = document.createElement('div');
             navItem.className = 'nav-category-item';
             navItem.dataset.categoryId = category.id;
@@ -1342,6 +1340,18 @@ const App = {
             navItem.innerHTML = `<i class="bi ${icon}"></i> ${category.name}`;
             navItem.addEventListener('click', () => this.filterByCategory(category.id));
             navContainer.appendChild(navItem);
+        });
+        
+        // 为所有导航项（包括HTML中预设的）添加点击事件
+        navContainer.querySelectorAll('.nav-category-item').forEach(item => {
+            // 移除可能的重复事件监听器
+            const newItem = item.cloneNode(true);
+            item.parentNode.replaceChild(newItem, item);
+            
+            // 添加新的事件监听器
+            newItem.addEventListener('click', () => {
+                this.filterByCategory(newItem.dataset.categoryId);
+            });
         });
     },
     

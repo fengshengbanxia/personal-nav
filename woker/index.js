@@ -53,10 +53,18 @@ async function handleApiRequest(request, path, corsHeaders) {
       }
     } 
     else if (apiPath === 'config') {
-      // 获取配置信息
+      // 获取配置信息 - 需要验证身份
+      if (!await isAuthenticated(request)) {
+        return jsonResponse({ error: '未授权访问' }, corsHeaders, 401);
+      }
+      
       try {
         const config = await KV_CONFIG.get('config', { type: 'json' });
-        return jsonResponse(config || {}, corsHeaders);
+        return jsonResponse({ 
+          success: true,
+          message: '验证成功',
+          config: config || {} 
+        }, corsHeaders);
       } catch (e) {
         return jsonResponse({ error: '获取配置数据失败' }, corsHeaders, 500);
       }
@@ -99,15 +107,31 @@ async function isAuthenticated(request) {
     // 从请求头获取API密钥
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('未提供认证令牌或格式不正确');
       return false;
     }
     
     const token = authHeader.replace('Bearer ', '');
+    
+    // 从KV获取存储的API令牌
     const storedToken = await KV_CONFIG.get('api_token');
+    if (!storedToken) {
+      console.error('KV_CONFIG中不存在api_token');
+      return false;
+    }
+    
+    // 安全的时间常数比较，避免时序攻击
+    const tokenMatches = token.length === storedToken.length && 
+                         token === storedToken;
+    
+    if (!tokenMatches) {
+      console.error('提供的令牌与存储的令牌不匹配');
+    }
     
     // 验证令牌是否匹配
-    return token === storedToken;
+    return tokenMatches;
   } catch (e) {
+    console.error('认证过程中发生错误:', e);
     return false;
   }
 }
