@@ -113,10 +113,21 @@ async function isAuthenticated(request) {
     
     const token = authHeader.replace('Bearer ', '');
     
-    // 从KV获取存储的API令牌
-    const storedToken = await KV_CONFIG.get('api_token');
+    // 获取存储的API令牌
+    let storedToken;
+    
+    // 尝试从环境变量获取令牌
+    if (typeof API_TOKEN !== 'undefined') {
+      // 如果API_TOKEN作为全局变量存在（环境变量方式）
+      storedToken = API_TOKEN;
+    } else {
+      // 从KV获取存储的API令牌
+      storedToken = await KV_CONFIG.get('api_token');
+    }
+    
+    // 如果没有存储的令牌，则验证失败
     if (!storedToken) {
-      console.error('KV_CONFIG中不存在api_token');
+      console.error('未找到有效的API令牌配置');
       return false;
     }
     
