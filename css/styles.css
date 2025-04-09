@@ -1,39 +1,39 @@
 /* 基础样式 */
 :root {
     /* 共享变量 */
-    --radius: 10px;
-    --transition: all 0.3s ease;
+    --radius: 12px;
+    --transition: all 0.25s ease-out;
 
     /* 基础颜色变量 - 浅色默认 */
-    --bg: #f5f5fa;
+    --bg: #f8f9fa;
     --surface: #ffffff;
-    --card: #f0f0f8;
-    --border: #e0e0e8;
-    --text: #202124;
-    --text-secondary: #5f6368;
+    --card: #ffffff;
+    --border: #dee2e6;
+    --text: #212529;
+    --text-secondary: #6c757d;
     --primary: #4285f4;
     --primary-dark: #3367d6;
-    --primary-light: #5e97f6;
+    --primary-light: #7baaf7;
     --secondary: #34a853;
     --accent: #ea4335;
-    --shadow: rgba(0, 0, 0, 0.1);
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
     --primary-rgb: 66, 133, 244; /* RGB for focus shadow */
 }
 
 /* 深色主题变量 */
 .dark-theme {
-    --bg: #1a1a1a;
-    --surface: #2d2d2d;
-    --card: #383838;
-    --border: #444444;
-    --text: #ffffff;
-    --text-secondary: #b0b0b0;
+    --bg: #121212;
+    --surface: #1e1e1e;
+    --card: #242424;
+    --border: #383838;
+    --text: #e0e0e0;
+    --text-secondary: #a0a0a0;
     --primary: #8ab4f8;
     --primary-dark: #669df6;
     --primary-light: #aecbfa;
     --secondary: #81c995;
     --accent: #f28b82;
-    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     --primary-rgb: 138, 180, 248; /* RGB for focus shadow */
 }
 
@@ -133,7 +133,7 @@ body {
 /* 主内容区 */
 .app-content {
     flex: 1;
-    padding: 20px 0;
+    padding: 25px 0;
 }
 
 /* 网站卡片样式 */
@@ -154,7 +154,7 @@ body {
 .site-card {
     background-color: var(--card);
     border-radius: var(--radius);
-    padding: 1rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -172,8 +172,13 @@ body {
 }
 
 .site-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px var(--shadow);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.15);
+    border-color: var(--primary);
+}
+
+.dark-theme .site-card:hover {
+    box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.25);
     border-color: var(--primary);
 }
 
@@ -230,45 +235,47 @@ body {
 .nav-category-item {
     background-color: var(--surface);
     border-radius: 20px;
-    padding: 5px 15px;
+    padding: 6px 14px;
     cursor: pointer;
     transition: var(--transition);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     border: 1px solid var(--border);
-    color: var(--text);
+    color: var(--text-secondary);
 }
 
 .dark-theme .nav-category-item {
     background-color: var(--surface);
     border-color: var(--border);
-    color: var(--text);
+    color: var(--text-secondary);
 }
 
 .nav-category-item:hover {
-    background-color: var(--primary-light);
-    color: white;
-    border-color: var(--primary-light);
+    background-color: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    border-color: rgba(var(--primary-rgb), 0.3);
 }
 
 .dark-theme .nav-category-item:hover {
-    background-color: var(--primary-light);
-    color: #1a1a1a; /* Use dark bg color for text */
-    border-color: var(--primary-light);
+    background-color: rgba(var(--primary-rgb), 0.2);
+    color: var(--primary);
+    border-color: rgba(var(--primary-rgb), 0.4);
 }
 
 .nav-category-item.active {
     background-color: var(--primary);
     color: white;
     border-color: var(--primary);
+    font-weight: 500;
 }
 
 .dark-theme .nav-category-item.active {
     background-color: var(--primary);
-    color: #1a1a1a; /* Use dark bg color for text */
+    color: #121212;
     border-color: var(--primary);
+    font-weight: 500;
 }
 
 /* 底部样式 */
@@ -290,7 +297,7 @@ body {
 .widget {
     background-color: var(--card);
     border-radius: var(--radius);
-    padding: 1rem;
+    padding: 1.25rem;
     box-shadow: var(--shadow);
     transition: var(--transition);
     border: 1px solid var(--border);

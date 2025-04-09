@@ -3,6 +3,39 @@
  * 处理UI渲染、站点数据展示和用户交互
  */
 
+// 新增：获取并显示一言
+async function loadHitokotoQuote() {
+    const apiUrl = 'https://v1.hitokoto.cn/?c=a&c=e&c=f&encode=json'; // 动画、原创、网络
+    const quoteElement = document.getElementById('daily-quote');
+    const fromElement = document.getElementById('quote-from');
+    const defaultQuote = '独自莫凭栏，无限江山，别时容易见时难。';
+    const defaultFrom = '— 李煜';
+
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        if (quoteElement) {
+            quoteElement.textContent = data.hitokoto || defaultQuote;
+        }
+        if (fromElement) {
+            fromElement.textContent = '— ' + (data.from || data.from_who || '未知来源');
+        }
+    } catch (error) {
+        console.error('获取一言失败:', error);
+        // 网络错误或解析失败时显示默认值
+        if (quoteElement) {
+            quoteElement.textContent = defaultQuote;
+        }
+        if (fromElement) {
+            fromElement.textContent = defaultFrom;
+        }
+    }
+}
+
 // 应用主控制器
 const App = {
     // 当前站点数据
@@ -1466,6 +1499,7 @@ const App = {
 };
 
 // 页面加载完成后初始化应用
-document.addEventListener('DOMContentLoaded', () => {
-    App.init();
+document.addEventListener('DOMContentLoaded', async () => {
+    await App.init();
+    await loadHitokotoQuote(); // 在App初始化后加载一言
 });
