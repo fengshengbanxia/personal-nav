@@ -6,7 +6,7 @@
 // 访问验证控制器
 const AccessVerifier = {
     // 访问密码 - 实际应用中应该从服务器获取或使用更安全的方式存储
-    accessPassword: 'navigation2025',
+    accessPassword: 'winterwinter',
     
     // 访问令牌的本地存储键名
     accessTokenKey: 'nav_access_token',
