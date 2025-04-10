@@ -154,9 +154,16 @@ body {
     margin-bottom: 2.5rem;
 }
 
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
 .category-title {
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
     color: var(--primary);
     display: flex;
@@ -164,6 +171,7 @@ body {
     gap: 0.5rem;
     font-weight: 600;
     position: relative;
+    margin-bottom: 0;
 }
 
 .category-title::after {
@@ -175,6 +183,28 @@ body {
     height: 3px;
     background: var(--gradient-primary);
     border-radius: 3px;
+}
+
+.btn-add-site {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--primary);
+    border-radius: 20px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-add-site:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.2);
 }
 
 .site-card {
@@ -288,6 +318,52 @@ body {
     padding-left: 2px;
 }
 
+/* 站点卡片操作按钮 */
+.site-card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    z-index: 10;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.site-card:hover .site-card-actions {
+    opacity: 1;
+}
+
+.btn-card-edit {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--primary);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0;
+    font-size: 14px;
+}
+
+.btn-card-edit:hover {
+    background: var(--primary);
+    color: white;
+    transform: rotate(15deg);
+}
+
+/* 站点卡片底部 */
+.site-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
 .site-card-link {
     color: var(--primary);
     text-decoration: none;
@@ -297,7 +373,6 @@ body {
     align-items: center;
     gap: 0.35rem;
     transition: var(--transition);
-    margin-top: auto;
     padding: 0.5rem 0.75rem;
     border-radius: calc(var(--radius) / 2);
     background-color: rgba(var(--primary-rgb), 0.08);
@@ -308,6 +383,25 @@ body {
     color: var(--primary-dark);
     background-color: rgba(var(--primary-rgb), 0.15);
     transform: translateX(4px);
+}
+
+.btn-quick-edit {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: calc(var(--radius) / 2);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.btn-quick-edit:hover {
+    color: var(--primary);
+    background-color: rgba(var(--primary-rgb), 0.08);
 }
 
 /* 分类导航栏 */

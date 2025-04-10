@@ -359,6 +359,91 @@
         </div>
     </div>
 
+    <!-- 快速添加站点模态框 -->
+    <div class="modal fade" id="quickAddModal" tabindex="-1" aria-labelledby="quickAddModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quickAddModalLabel">添加站点</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="quick-add-form">
+                        <input type="hidden" id="quick-add-category-id">
+
+                        <div class="mb-3">
+                            <label for="quick-add-name" class="form-label">站点名称</label>
+                            <input type="text" class="form-control" id="quick-add-name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quick-add-url" class="form-label">站点网址</label>
+                            <input type="url" class="form-control" id="quick-add-url" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quick-add-icon" class="form-label">图标URL（可选）</label>
+                            <input type="url" class="form-control" id="quick-add-icon">
+                            <div class="form-text">留空将使用默认图标</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quick-add-desc" class="form-label">站点描述（可选）</label>
+                            <textarea class="form-control" id="quick-add-desc" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="quick-add-save-btn">添加站点</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快速编辑模态框 -->
+    <div class="modal fade" id="quickEditModal" tabindex="-1" aria-labelledby="quickEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quickEditModalLabel">编辑站点</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="quick-edit-form">
+                        <input type="hidden" id="quick-edit-site-id">
+                        <input type="hidden" id="quick-edit-category-id">
+
+                        <div class="mb-3">
+                            <label for="quick-edit-name" class="form-label">站点名称</label>
+                            <input type="text" class="form-control" id="quick-edit-name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quick-edit-url" class="form-label">站点网址</label>
+                            <input type="url" class="form-control" id="quick-edit-url" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quick-edit-icon" class="form-label">图标URL（可选）</label>
+                            <input type="url" class="form-control" id="quick-edit-icon">
+                            <div class="form-text">留空将使用默认图标</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quick-edit-desc" class="form-label">站点描述（可选）</label>
+                            <textarea class="form-control" id="quick-edit-desc" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="quick-edit-save-btn">保存更改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 消息容器 -->
     <div id="message-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
 
@@ -371,5 +456,6 @@
     <script src="js/sites.js"></script>
     <script src="js/category-icons.js"></script>
     <script src="js/sortable-init.js"></script>
+    <script src="js/quick-edit.js"></script>
 </body>
 </html>

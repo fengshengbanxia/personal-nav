@@ -136,10 +136,17 @@ const App = {
         this.sitesData.forEach(category => {
             const categoryHtml = `
                 <div class="col-12 category-section" data-category-id="${category.id}">
-                    <h2 class="category-title">
-                        ${this.isAdmin ? '<i class="bi bi-grip-horizontal me-2 drag-indicator" title="拖动排序"></i>' : ''}
-                        ${category.name}
-                    </h2>
+                    <div class="category-header">
+                        <h2 class="category-title">
+                            ${this.isAdmin ? '<i class="bi bi-grip-horizontal me-2 drag-indicator" title="拖动排序"></i>' : ''}
+                            ${category.name}
+                        </h2>
+                        ${this.isAdmin ? `
+                            <button class="btn-add-site" data-category-id="${category.id}" title="在此分类添加站点">
+                                <i class="bi bi-plus-circle"></i> 添加站点
+                            </button>
+                        ` : ''}
+                    </div>
                     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3 sites-row">
                         ${category.sites.map(site => this.renderSiteCard(site)).join('')}
                     </div>
@@ -209,15 +216,27 @@ const App = {
         return `
             <div class="col" data-site-id="${site.id}">
                 <div class="site-card">
-                    ${this.isAdmin ? '<div class="drag-handle-site" title="拖动排序"><i class="bi bi-grip-vertical"></i></div>' : ''}
+                    ${this.isAdmin ? `
+                        <div class="site-card-actions">
+                            <div class="drag-handle-site" title="拖动排序"><i class="bi bi-grip-vertical"></i></div>
+                            <button class="btn-card-edit" title="编辑站点" data-site-id="${site.id}"><i class="bi bi-pencil"></i></button>
+                        </div>
+                    ` : ''}
                     <div class="d-flex align-items-center mb-2">
                         ${iconHtml}
                         <h3 class="site-card-title mb-0">${site.name}</h3>
                     </div>
                     <p class="site-card-desc">${site.desc || ''}</p>
-                    <a href="${site.url}" target="_blank" class="site-card-link">
-                        <i class="bi bi-box-arrow-up-right"></i> 访问
-                    </a>
+                    <div class="site-card-footer">
+                        <a href="${site.url}" target="_blank" class="site-card-link">
+                            <i class="bi bi-box-arrow-up-right"></i> 访问
+                        </a>
+                        ${this.isAdmin ? `
+                            <button class="btn-quick-edit" title="快速编辑" data-site-id="${site.id}">
+                                <i class="bi bi-pencil-square"></i> 编辑
+                            </button>
+                        ` : ''}
+                    </div>
                 </div>
             </div>
         `;
