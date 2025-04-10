@@ -18,7 +18,7 @@ function initQuickEdit() {
             const siteId = button.dataset.siteId;
             openQuickEditModal(siteId);
         }
-        
+
         // 分类中的添加站点按钮
         if (event.target.closest('.btn-add-site')) {
             const button = event.target.closest('.btn-add-site');
@@ -26,13 +26,13 @@ function initQuickEdit() {
             openQuickAddModal(categoryId);
         }
     });
-    
+
     // 设置快速编辑保存按钮事件
     const quickEditSaveBtn = document.getElementById('quick-edit-save-btn');
     if (quickEditSaveBtn) {
         quickEditSaveBtn.addEventListener('click', saveQuickEdit);
     }
-    
+
     // 设置快速添加保存按钮事件
     const quickAddSaveBtn = document.getElementById('quick-add-save-btn');
     if (quickAddSaveBtn) {
@@ -48,7 +48,7 @@ function openQuickEditModal(siteId) {
         App.showError('无法找到站点数据');
         return;
     }
-    
+
     // 填充表单数据
     document.getElementById('quick-edit-site-id').value = site.id;
     document.getElementById('quick-edit-category-id').value = site.categoryId;
@@ -56,7 +56,7 @@ function openQuickEditModal(siteId) {
     document.getElementById('quick-edit-url').value = site.url;
     document.getElementById('quick-edit-icon').value = site.icon || '';
     document.getElementById('quick-edit-desc').value = site.desc || '';
-    
+
     // 显示模态框
     const modal = new bootstrap.Modal(document.getElementById('quickEditModal'));
     modal.show();
@@ -66,10 +66,10 @@ function openQuickEditModal(siteId) {
 function openQuickAddModal(categoryId) {
     // 重置表单
     document.getElementById('quick-add-form').reset();
-    
+
     // 设置分类ID
     document.getElementById('quick-add-category-id').value = categoryId;
-    
+
     // 显示模态框
     const modal = new bootstrap.Modal(document.getElementById('quickAddModal'));
     modal.show();
@@ -84,45 +84,45 @@ async function saveQuickEdit() {
     const url = document.getElementById('quick-edit-url').value.trim();
     const icon = document.getElementById('quick-edit-icon').value.trim();
     const desc = document.getElementById('quick-edit-desc').value.trim();
-    
+
     // 验证必填字段
     if (!name || !url) {
         App.showError('请填写站点名称和网址');
         return;
     }
-    
+
     // 验证URL格式
     if (!isValidUrl(url)) {
         App.showError('请输入有效的URL格式 (例如: https://example.com)');
         return;
     }
-    
+
     // 查找站点和分类
     const { categoryIndex, siteIndex } = findSiteIndexes(siteId);
     if (categoryIndex < 0 || siteIndex < 0) {
         App.showError('无法找到站点数据');
         return;
     }
-    
+
     // 更新站点数据
     App.sitesData[categoryIndex].sites[siteIndex].name = name;
     App.sitesData[categoryIndex].sites[siteIndex].url = url;
     App.sitesData[categoryIndex].sites[siteIndex].icon = icon || null;
     App.sitesData[categoryIndex].sites[siteIndex].desc = desc || '';
-    
+
     try {
         // 保存更新后的数据
-        await SitesManager.saveSites(App.sitesData);
-        
+        await SitesManager.updateSites(App.sitesData);
+
         // 关闭模态框
         const modal = bootstrap.Modal.getInstance(document.getElementById('quickEditModal'));
         if (modal) {
             modal.hide();
         }
-        
+
         // 重新渲染站点
         App.renderSites();
-        
+
         // 显示成功消息
         App.showMessage('站点已成功更新', 'success');
     } catch (error) {
@@ -139,26 +139,26 @@ async function saveQuickAdd() {
     const url = document.getElementById('quick-add-url').value.trim();
     const icon = document.getElementById('quick-add-icon').value.trim();
     const desc = document.getElementById('quick-add-desc').value.trim();
-    
+
     // 验证必填字段
     if (!name || !url) {
         App.showError('请填写站点名称和网址');
         return;
     }
-    
+
     // 验证URL格式
     if (!isValidUrl(url)) {
         App.showError('请输入有效的URL格式 (例如: https://example.com)');
         return;
     }
-    
+
     // 查找分类
     const categoryIndex = App.sitesData.findIndex(category => category.id === categoryId);
     if (categoryIndex < 0) {
         App.showError('无法找到分类数据');
         return;
     }
-    
+
     // 创建新站点
     const newSite = {
         id: 'site_' + Date.now(),
@@ -168,23 +168,23 @@ async function saveQuickAdd() {
         desc: desc || '',
         categoryId: categoryId
     };
-    
+
     // 添加到分类中
     App.sitesData[categoryIndex].sites.push(newSite);
-    
+
     try {
         // 保存更新后的数据
-        await SitesManager.saveSites(App.sitesData);
-        
+        await SitesManager.updateSites(App.sitesData);
+
         // 关闭模态框
         const modal = bootstrap.Modal.getInstance(document.getElementById('quickAddModal'));
         if (modal) {
             modal.hide();
         }
-        
+
         // 重新渲染站点
         App.renderSites();
-        
+
         // 显示成功消息
         App.showMessage('站点已成功添加', 'success');
     } catch (error) {
