@@ -1,9 +1,12 @@
-/* 主题切换相关样式 */
-.theme-toggle-container {
+/* 主题切换和设置相关样式 */
+.theme-toggle-container,
+.settings-container {
     position: relative;
+    margin-right: 0.5rem;
 }
 
-.theme-toggle {
+.theme-toggle,
+.settings-toggle {
     background: none;
     border: none;
     color: var(--text);
@@ -17,7 +20,8 @@
     transition: var(--transition);
 }
 
-.theme-toggle:hover {
+.theme-toggle:hover,
+.settings-toggle:hover {
     background-color: rgba(var(--primary-rgb), 0.1);
     color: var(--primary);
     transform: rotate(15deg);
