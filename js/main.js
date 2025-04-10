@@ -218,9 +218,9 @@ const App = {
                 <div class="site-card">
                     ${this.isAdmin ? `
                         <div class="site-card-actions">
-                            <div class="drag-handle-site" title="拖动排序"><i class="bi bi-grip-vertical"></i></div>
                             <button class="btn-card-edit" title="编辑站点" data-site-id="${site.id}"><i class="bi bi-pencil"></i></button>
                         </div>
+                        <div class="drag-handle-site" title="拖动排序"><i class="bi bi-grip-vertical"></i></div>
                     ` : ''}
                     <div class="d-flex align-items-center mb-2">
                         ${iconHtml}
