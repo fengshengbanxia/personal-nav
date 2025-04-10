@@ -1,0 +1,71 @@
+/* 主题切换相关样式 */
+.theme-toggle-container {
+    position: relative;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.theme-toggle:hover {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    transform: rotate(15deg);
+}
+
+/* 主题下拉菜单 */
+.theme-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    width: 160px;
+    z-index: 1000;
+    overflow: hidden;
+    display: none;
+    margin-top: 0.5rem;
+    transition: var(--transition);
+    transform-origin: top right;
+    transform: scale(0.95);
+    opacity: 0;
+}
+
+.theme-dropdown.show {
+    display: block;
+    transform: scale(1);
+    opacity: 1;
+}
+
+.theme-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+    color: var(--text);
+}
+
+.theme-option:hover {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+}
+
+.theme-option i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}

@@ -160,12 +160,58 @@ const App = {
 
     // 渲染单个站点卡片
     renderSiteCard(site) {
+        // 生成图标HTML
+        let iconHtml = '';
+        if (site.icon) {
+            // 使用用户提供的图标
+            iconHtml = `<img src="${site.icon}" alt="${site.name}" class="site-icon">`;
+        } else {
+            // 生成默认图标 - 使用网站首字母或图标
+            const firstLetter = site.name.charAt(0).toUpperCase();
+            const iconColors = [
+                '#4361ee', '#3a0ca3', '#7209b7', '#f72585', '#4cc9f0',
+                '#4895ef', '#560bad', '#f15bb5', '#fee440', '#00bbf9',
+                '#00f5d4', '#e63946', '#588157', '#ff9e00', '#8338ec'
+            ];
+            // 根据站点名称生成随机但固定的颜色
+            const colorIndex = site.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % iconColors.length;
+            const bgColor = iconColors[colorIndex];
+
+            // 判断是否使用图标或字母
+            let iconContent = '';
+            if (site.name.includes('购物') || site.name.includes('商城')) {
+                iconContent = '<i class="bi bi-cart"></i>';
+            } else if (site.name.includes('视频') || site.name.includes('电影') || site.name.includes('影视')) {
+                iconContent = '<i class="bi bi-film"></i>';
+            } else if (site.name.includes('音乐')) {
+                iconContent = '<i class="bi bi-music-note"></i>';
+            } else if (site.name.includes('游戏')) {
+                iconContent = '<i class="bi bi-controller"></i>';
+            } else if (site.name.includes('学习') || site.name.includes('教育')) {
+                iconContent = '<i class="bi bi-book"></i>';
+            } else if (site.name.includes('工具')) {
+                iconContent = '<i class="bi bi-tools"></i>';
+            } else if (site.name.includes('社交') || site.name.includes('社区')) {
+                iconContent = '<i class="bi bi-people"></i>';
+            } else if (site.name.includes('新闻') || site.name.includes('资讯')) {
+                iconContent = '<i class="bi bi-newspaper"></i>';
+            } else if (site.name.includes('开发') || site.name.includes('编程')) {
+                iconContent = '<i class="bi bi-code-square"></i>';
+            } else {
+                // 使用首字母
+                iconContent = firstLetter;
+            }
+
+            // 创建自定义图标
+            iconHtml = `<div class="default-site-icon" style="background-color: ${bgColor}">${iconContent}</div>`;
+        }
+
         return `
             <div class="col" data-site-id="${site.id}">
                 <div class="site-card">
                     ${this.isAdmin ? '<div class="drag-handle-site" title="拖动排序"><i class="bi bi-grip-vertical"></i></div>' : ''}
                     <div class="d-flex align-items-center mb-2">
-                        ${site.icon ? `<img src="${site.icon}" alt="${site.name}" class="site-icon">` : ''}
+                        ${iconHtml}
                         <h3 class="site-card-title mb-0">${site.name}</h3>
                     </div>
                     <p class="site-card-desc">${site.desc || ''}</p>
@@ -1345,11 +1391,50 @@ const App = {
             siteItem.className = 'list-group-item d-flex justify-content-between align-items-center';
             siteItem.dataset.siteIndex = index;
 
+            // 生成图标HTML
             let iconHtml = '';
             if (site.icon) {
+                // 使用用户提供的图标
                 iconHtml = `<img src="${site.icon}" alt="${site.name}" class="me-2" style="width: 24px; height: 24px;">`;
             } else {
-                iconHtml = `<i class="bi bi-globe me-2"></i>`;
+                // 生成默认图标 - 使用网站首字母或图标
+                const firstLetter = site.name.charAt(0).toUpperCase();
+                const iconColors = [
+                    '#4361ee', '#3a0ca3', '#7209b7', '#f72585', '#4cc9f0',
+                    '#4895ef', '#560bad', '#f15bb5', '#fee440', '#00bbf9',
+                    '#00f5d4', '#e63946', '#588157', '#ff9e00', '#8338ec'
+                ];
+                // 根据站点名称生成随机但固定的颜色
+                const colorIndex = site.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % iconColors.length;
+                const bgColor = iconColors[colorIndex];
+
+                // 判断是否使用图标或字母
+                let iconContent = '';
+                if (site.name.includes('购物') || site.name.includes('商城')) {
+                    iconContent = '<i class="bi bi-cart"></i>';
+                } else if (site.name.includes('视频') || site.name.includes('电影') || site.name.includes('影视')) {
+                    iconContent = '<i class="bi bi-film"></i>';
+                } else if (site.name.includes('音乐')) {
+                    iconContent = '<i class="bi bi-music-note"></i>';
+                } else if (site.name.includes('游戏')) {
+                    iconContent = '<i class="bi bi-controller"></i>';
+                } else if (site.name.includes('学习') || site.name.includes('教育')) {
+                    iconContent = '<i class="bi bi-book"></i>';
+                } else if (site.name.includes('工具')) {
+                    iconContent = '<i class="bi bi-tools"></i>';
+                } else if (site.name.includes('社交') || site.name.includes('社区')) {
+                    iconContent = '<i class="bi bi-people"></i>';
+                } else if (site.name.includes('新闻') || site.name.includes('资讯')) {
+                    iconContent = '<i class="bi bi-newspaper"></i>';
+                } else if (site.name.includes('开发') || site.name.includes('编程')) {
+                    iconContent = '<i class="bi bi-code-square"></i>';
+                } else {
+                    // 使用首字母
+                    iconContent = firstLetter;
+                }
+
+                // 创建自定义图标
+                iconHtml = `<div class="default-site-icon me-2" style="background-color: ${bgColor}; width: 24px; height: 24px; font-size: 14px;">${iconContent}</div>`;
             }
 
             siteItem.innerHTML = `

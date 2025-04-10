@@ -21,6 +21,17 @@
     --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
 }
 
+/* 紫色主题变量 */
+.purple-theme {
+    --primary: #8e44ad;
+    --primary-dark: #7d3c98;
+    --primary-light: #a569bd;
+    --secondary: #9b59b6;
+    --accent: #e74c3c;
+    --primary-rgb: 142, 68, 173; /* RGB for focus shadow */
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+}
+
 /* 深色主题变量 */
 .dark-theme {
     --bg: #121212;
@@ -230,6 +241,29 @@ body {
 }
 
 .site-card:hover .site-icon {
+    transform: scale(1.1);
+}
+
+/* 默认站点图标样式 */
+.default-site-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.default-site-icon i {
+    font-size: 18px;
+}
+
+.site-card:hover .default-site-icon {
     transform: scale(1.1);
 }
 

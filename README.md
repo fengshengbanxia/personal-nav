@@ -78,6 +78,7 @@ personal-nav/
    - 路由: `/api/*`
    - Worker: 选择您刚创建的 Worker
 
+访问密码或其他设置。默认的访问密码设置为"navigation2025"，您可以在access-verify.js文件中修改这个值。
 ## 自定义数据格式
 
 站点数据格式示例：
