@@ -202,6 +202,11 @@ defaultSettings: {
 - 如果无法匹配，则使用站点名称的首字母
 - 图标的背景颜色根据站点名称生成，确保同一站点始终使用相同的颜色
 
+## 界面展示
+![浅色](https://tgpicture.6666689.xyz/file/1744292096036_image.png)
+![深色](https://tgpicture.6666689.xyz/file/1744292081709_image.png)
+
+
 ## 许可证
 
 MIT
